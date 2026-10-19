@@ -27,7 +27,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
@@ -85,14 +85,25 @@ def fetch(url: str, headers: dict, body: dict | None = None) -> tuple[dict | Non
     raise AssertionError("unreachable")
 
 
-def sec_table(name: str, identity: str, prev_meta: dict) -> tuple[list[dict], str]:
-    """One of SEC's ticker files as rows, refusing a copy older than the one the last build used."""
-    # The cache-buster matters: SEC's CDN has been seen serving a day-old copy to the plain URL.
+def sec_table(name: str, identity: str, prev_meta: dict) -> tuple[list[dict], str, bool]:
+    """One of SEC's ticker files as rows, its Last-Modified, and whether it is older than the copy
+    the last build used. SEC's CDN serves stale copies: the cache-buster helps on some edges, but a
+    GitHub runner was handed a 4-day-old file through it."""
     body, headers = fetch(f"{SEC_FILES[name]}?t={int(time.time())}", {"User-Agent": identity})
     modified, seen = headers["Last-Modified"], prev_meta.get("sec_last_modified", {}).get(name)
-    if seen and parsedate_to_datetime(modified) < parsedate_to_datetime(seen):
-        sys.exit(f"SEC served a stale {name} file: {modified}, older than the last build's {seen}")
-    return [dict(zip(body["fields"], row)) for row in body["data"]], modified
+    stale = bool(seen and parsedate_to_datetime(modified) < parsedate_to_datetime(seen))
+    return [dict(zip(body["fields"], row)) for row in body["data"]], modified, stale
+
+
+def stale_sec(prev_built: str, today: str, modified: list[str]) -> None:
+    """SEC handed this build older ticker files than the last one used. Publishing would roll the
+    data back, so keep the last build -- quietly for a few days (a stale CDN edge recovers), then
+    loudly: past 4 days, which covers a weekend, something is stuck."""
+    age = (date.fromisoformat(today) - date.fromisoformat(prev_built)).days
+    message = f"SEC served ticker files older than the last build's ({', '.join(modified)}); keeping the {prev_built} build"
+    if age > 4:
+        sys.exit(f"{message}, now {age} days old")
+    print(f"::warning::{message}")  # a GitHub Actions annotation; plain output anywhere else
 
 
 def openfigi_headers(api_key: str | None) -> dict:
@@ -301,8 +312,10 @@ def main() -> None:
     prev_meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
     today = datetime.now(timezone.utc).date().isoformat()
 
-    exchange, exchange_modified = sec_table("exchange", identity, prev_meta)
-    funds, funds_modified = sec_table("mf", identity, prev_meta)
+    exchange, exchange_modified, exchange_stale = sec_table("exchange", identity, prev_meta)
+    funds, funds_modified, funds_stale = sec_table("mf", identity, prev_meta)
+    if exchange_stale or funds_stale:
+        return stale_sec(prev_meta["built"], today, [exchange_modified, funds_modified])
     api_key = os.environ.get("OPENFIGI_API_KEY")
     listed = sorted({sec_ticker(r["ticker"]) for r in exchange if r["exchange"] in LISTED})
     figi_rows = universe(openfigi_listed(listed, api_key), openfigi_etps(api_key))

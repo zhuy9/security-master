@@ -75,8 +75,11 @@ at most 10 requests a second across all machines, with a declared User-Agent of 
 
 Measured 2026-10-19, and handled in `src/build.py`:
 
-- SEC's CDN served a day-old `company_tickers_exchange.json` to the plain URL. The build adds a
-  cache-buster and refuses a file older than the one the last build used.
+- SEC's CDN serves stale copies of its ticker files: a day-old `company_tickers_exchange.json` to
+  the plain URL here, and a 4-day-old one to a GitHub Actions runner even with a cache-buster.
+  The build compares each file's `Last-Modified` with the last build's; if SEC hands it an older
+  file, it keeps the last build instead of rolling the data back, and only fails once the data is
+  more than 4 days old.
 - `company_tickers_exchange.json` lists only about 200 of the roughly 5,800 US-listed ETFs (unit
   and grantor trusts such as SPY and GLD). 1940-Act ETFs such as IVV and QQQ are only in
   `company_tickers_mf.json`, and about 1,000 are in neither. That is why ETPs come from OpenFIGI

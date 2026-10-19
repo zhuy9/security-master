@@ -137,8 +137,9 @@ environment win. SEC requires `EDGAR_IDENTITY` as the User-Agent. The
 OpenFIGI key is free and optional, but without it a daily build takes about 50 minutes instead of
 about 6. The first build (and every `--full` one) makes about 6,300 SEC requests at up to 8 a
 second; later builds fetch only new issuers. A build refuses to write anything if active rows
-fall more than 5%, a ticker is on two active rows, SEC serves an older file than last time, or
-any identifier looks like a CUSIP or ISIN.
+fall more than 5%, a ticker is on two active rows, or any identifier looks like a CUSIP or ISIN.
+If SEC's CDN hands it older ticker files than the last build used, it keeps the last build and
+passes with a warning, failing only once the data is more than 4 days old.
 
 Layout: `src/build.py` builds the data (with `src/sectors.py`, the SIC-to-sector table);
 `src/security_master/` is the Python client, the only thing the package ships; `tests/` checks both

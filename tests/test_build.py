@@ -7,7 +7,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from build import DEAD_TICKER, FORBIDDEN, country, usable_etp, apply_sectors, check, load_dotenv, merge, sec_ticker, security_rows, universe
+from build import (
+    DEAD_TICKER, FORBIDDEN, apply_sectors, check, country, load_dotenv, merge, sec_ticker, security_rows, stale_sec,
+    universe, usable_etp,
+)  # fmt: skip
 
 
 def test_load_dotenv_never_overrides_the_environment() -> None:
@@ -121,6 +124,15 @@ def test_country_reads_both_sec_address_formats() -> None:
     assert country({"isForeignLocation": 1, "country": "Taiwan", "countryCode": "F5"}) == "Taiwan"
     assert country({"isForeignLocation": 1, "country": "Ontario, Canada"}) == "Canada"
     assert country({"stateOrCountry": "XX", "stateOrCountryDescription": "UNKNOWN"}) == "" == country({})
+
+
+def test_stale_sec_files_keep_the_last_build_and_fail_only_past_four_days() -> None:
+    stale_sec("2026-10-16", "2026-10-20", ["Thu, 15 Oct 2026 13:39:20 GMT"])  # Friday's build on a Tuesday: warn only
+    try:
+        stale_sec("2026-10-16", "2026-10-21", ["Thu, 15 Oct 2026 13:39:20 GMT"])
+        raise AssertionError("expected SystemExit past 4 days")
+    except SystemExit as e:
+        assert "5 days old" in str(e)
 
 
 def test_forbidden_pattern() -> None:
