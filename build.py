@@ -278,10 +278,23 @@ def write_csv(path: Path, rows: dict[str, dict], cols: list[str]) -> None:
         writer.writerows(rows[k] for k in sorted(rows))
 
 
+def load_dotenv(path: Path) -> None:
+    """KEY=value lines from a .env file into the environment. Variables already set win, so CI
+    secrets override a stray .env. ponytail: no `export`, multi-line values or inline comments."""
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        key, sep, value = line.partition("=")
+        key = key.strip()
+        if sep and key and not key.startswith("#"):
+            os.environ.setdefault(key, value.strip().strip("'\""))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--full", action="store_true", help="refetch every issuer from SEC, not only new ones")
     args = parser.parse_args()
+    load_dotenv(Path(__file__).parent / ".env")
     identity = os.environ.get("EDGAR_IDENTITY") or sys.exit("EDGAR_IDENTITY is not set: SEC requires 'Name email'.")
     meta_path = DATA / "meta.json"
     prev_meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}

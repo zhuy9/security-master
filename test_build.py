@@ -1,6 +1,23 @@
 """Checks for build.py's logic. No network. Run: python test_build.py"""
 
-from build import DEAD_TICKER, FORBIDDEN, country, usable_etp, apply_sectors, check, merge, sec_ticker, security_rows, universe
+import os
+import tempfile
+from pathlib import Path
+
+from build import DEAD_TICKER, FORBIDDEN, country, usable_etp, apply_sectors, check, load_dotenv, merge, sec_ticker, security_rows, universe
+
+
+def test_load_dotenv_never_overrides_the_environment() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        env = Path(tmp) / ".env"
+        env.write_text('# comment\nSM_TEST_A="Jane Doe jane@example.com"\nSM_TEST_B=\nSM_TEST_C=from-file\n\nnot a pair\n')
+        os.environ["SM_TEST_C"] = "from-env"
+        load_dotenv(env)
+        load_dotenv(Path(tmp) / "missing")  # no file is fine
+        assert os.environ["SM_TEST_A"] == "Jane Doe jane@example.com"
+        assert os.environ["SM_TEST_B"] == "" and os.environ["SM_TEST_C"] == "from-env"
+        for key in ("SM_TEST_A", "SM_TEST_B", "SM_TEST_C"):
+            del os.environ[key]
 
 
 def test_sec_ticker() -> None:

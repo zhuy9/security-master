@@ -91,11 +91,13 @@ shows listings, delistings and renames day by day.
 ## Build it
 
 ```sh
+cp .env.example .env   # then fill in EDGAR_IDENTITY and OPENFIGI_API_KEY
 python test_build.py
-EDGAR_IDENTITY="Your Name you@example.com" OPENFIGI_API_KEY=... python build.py   # --full refetches every issuer
+python build.py        # --full refetches every issuer
 ```
 
-Python 3.10+, standard library only. SEC requires `EDGAR_IDENTITY` as the User-Agent. The
+Python 3.10+, standard library only. `build.py` reads `.env`; variables already set in the
+environment win. SEC requires `EDGAR_IDENTITY` as the User-Agent. The
 OpenFIGI key is free and optional, but without it a daily build takes about 50 minutes instead of
 about 6. The first build (and every `--full` one) makes about 6,300 SEC requests at up to 8 a
 second; later builds fetch only new issuers. A build refuses to write anything if active rows
