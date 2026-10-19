@@ -53,7 +53,7 @@ For offline prototyping, copy `data/` into your project; keep `data/LICENSE` wit
 | `exchange` | SEC's listing label: `Nasdaq`, `NYSE` (which includes NYSE American and NYSE Arca), `CBOE`, `TXSE`. Blank where SEC doesn't say, which is most ETFs. |
 | `cik` | Issuer's SEC CIK, 10 digits. For a fund, its trust's CIK. Blank if SEC has no match. |
 | `series_id`, `class_id` | SEC series and class of a 1940-Act fund |
-| `sector` | This project's sector from the issuer's SIC code (below). Blank for funds. |
+| `sector` | This project's sector from the issuer's SIC code (below). Blank for funds, and for the few issuers without a SIC (mostly business development companies). |
 | `status` | `active`, or `delisted` once it drops out. Rows are never deleted. |
 | `first_seen` | First build that listed it. The dataset starts 2026-10-19, so this is not a listing date. |
 | `last_seen` | For delisted rows, the last build that listed it. Blank while active. |
