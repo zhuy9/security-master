@@ -1,5 +1,7 @@
 """Checks for src/build.py's logic. No network. Run: python tests/test_build.py"""
 
+import contextlib
+import io
 import os
 import sys
 import tempfile
@@ -127,7 +129,10 @@ def test_country_reads_both_sec_address_formats() -> None:
 
 
 def test_stale_sec_files_keep_the_last_build_and_fail_only_past_four_days() -> None:
-    stale_sec("2026-10-16", "2026-10-20", ["Thu, 15 Oct 2026 13:39:20 GMT"])  # Friday's build on a Tuesday: warn only
+    out = io.StringIO()  # keep the ::warning:: line out of CI, where GitHub would turn it into an annotation
+    with contextlib.redirect_stdout(out):
+        stale_sec("2026-10-16", "2026-10-20", ["Thu, 15 Oct 2026 13:39:20 GMT"])  # Friday's build on a Tuesday
+    assert out.getvalue().startswith("::warning::")
     try:
         stale_sec("2026-10-16", "2026-10-21", ["Thu, 15 Oct 2026 13:39:20 GMT"])
         raise AssertionError("expected SystemExit past 4 days")
