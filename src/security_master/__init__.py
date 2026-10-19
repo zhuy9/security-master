@@ -70,8 +70,16 @@ def _cache_file(pin: str | None) -> Path:
 
 
 def _http(url: str) -> bytes:
-    with urllib.request.urlopen(url, timeout=30) as resp:
-        return resp.read()
+    """GET with three tries: one dropped connection must not fail a whole run."""
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(url, timeout=30) as resp:
+                return resp.read()
+        except (OSError, http.client.HTTPException):
+            if attempt == 2:
+                raise
+            time.sleep(2**attempt)
+    raise AssertionError("unreachable")
 
 
 def _head() -> str:

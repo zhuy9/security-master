@@ -13,6 +13,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 import security_master as sm  # noqa: E402
 
+REAL_HTTP = sm._http  # captured before fresh() swaps in the fake GitHub
+
 HEADER = "composite_figi,share_class_figi,ticker,figi_ticker,name,security_type,exchange,cik,series_id,class_id,sector,status,first_seen,last_seen\n"
 ROWS = (
     "BBG000B9XRY4,BBG001S5N8V8,AAPL,AAPL,APPLE INC,Common Stock,Nasdaq,0000320193,,,Technology,active,2026-10-19,\n"
@@ -64,6 +66,37 @@ def fresh(ttl: int = 3600, pin: str | None = None) -> tuple[FakeGitHub, list[flo
     if pin:
         os.environ["SECURITY_MASTER_REF"] = pin
     return github, clock
+
+
+def test_http_retries_a_dropped_connection_then_gives_up() -> None:
+    import io
+    import urllib.request
+
+    calls, real_urlopen, real_time = [], urllib.request.urlopen, sm.time
+
+    def flaky(url, timeout):
+        calls.append(url)
+        if len(calls) < 3:
+            raise urllib.error.URLError("connection reset")
+        return io.BytesIO(b"data")
+
+    urllib.request.urlopen, sm.time = flaky, types.SimpleNamespace(sleep=lambda s: None)
+    try:
+        assert REAL_HTTP("https://example.org/x") == b"data" and len(calls) == 3
+        calls.clear()
+
+        def down(url, timeout):
+            calls.append(url)
+            raise urllib.error.URLError("down")
+
+        urllib.request.urlopen = down
+        try:
+            REAL_HTTP("https://example.org/x")
+            raise AssertionError("expected URLError after three tries")
+        except urllib.error.URLError:
+            assert len(calls) == 3
+    finally:
+        urllib.request.urlopen, sm.time = real_urlopen, real_time
 
 
 def test_lookups() -> None:
