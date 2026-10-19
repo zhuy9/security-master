@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main # the branch tip, not the triggering commit: a queued or re-run job must build on the latest data
-      - run: python3 test_build.py
+      - run: python3 tests/test_build.py && python3 tests/test_client.py
       - name: Build
         env:
           EDGAR_IDENTITY: ${{ secrets.EDGAR_IDENTITY }}
@@ -32,7 +32,7 @@ jobs:
           FULL: ${{ inputs.full }}
         # Mondays refetch every issuer, since names and SIC codes drift; other days only new CIKs.
         run: |
-          if [ "$FULL" = "true" ] || [ "$(date -u +%u)" = 1 ]; then python3 build.py --full; else python3 build.py; fi
+          if [ "$FULL" = "true" ] || [ "$(date -u +%u)" = 1 ]; then python3 src/build.py --full; else python3 src/build.py; fi
       # Commits whenever data/ changed. A refused build exits non-zero above and writes nothing, so
       # bad data never gets here; GitHub emails the repo owner about the failed run.
       - name: Commit

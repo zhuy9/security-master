@@ -1,8 +1,11 @@
-"""Checks for build.py's logic. No network. Run: python test_build.py"""
+"""Checks for src/build.py's logic. No network. Run: python tests/test_build.py"""
 
 import os
+import sys
 import tempfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from build import DEAD_TICKER, FORBIDDEN, country, usable_etp, apply_sectors, check, load_dotenv, merge, sec_ticker, security_rows, universe
 

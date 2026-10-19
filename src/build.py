@@ -1,7 +1,7 @@
 """Build data/securities.csv and data/issuers.csv: US exchange-listed stocks, ETFs and closed-end
 funds keyed by composite FIGI, with issuer fields and a sector from SEC EDGAR.
 
-    EDGAR_IDENTITY="Name email" [OPENFIGI_API_KEY=...] python build.py [--full]
+    EDGAR_IDENTITY="Name email" [OPENFIGI_API_KEY=...] python src/build.py [--full]
 
 Universe, in two halves:
 - Stocks and closed-end funds: every ticker SEC lists on a US exchange, mapped through OpenFIGI
@@ -12,7 +12,7 @@ Universe, in two halves:
   SEC's ticker files, so SEC can't be the list here.
 CIK and listing exchange come from SEC's ticker files, issuer fields from SEC submissions.
 
-Only fields these sources allow to be redistributed are published -- see DATA_SOURCES.md. No
+Only fields these sources allow to be redistributed are published -- see docs/DATA_SOURCES.md. No
 CUSIP, ISIN, Nasdaq symbol-directory or GICS data, ever.
 """
 
@@ -33,7 +33,8 @@ from pathlib import Path
 
 from sectors import sic_to_sector
 
-DATA = Path(__file__).parent / "data"
+ROOT = Path(__file__).resolve().parent.parent
+DATA = ROOT / "data"
 MAPPING_URL = "https://api.openfigi.com/v3/mapping"
 FILTER_URL = "https://api.openfigi.com/v3/filter"
 SEC_FILES = {
@@ -294,7 +295,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--full", action="store_true", help="refetch every issuer from SEC, not only new ones")
     args = parser.parse_args()
-    load_dotenv(Path(__file__).parent / ".env")
+    load_dotenv(ROOT / ".env")
     identity = os.environ.get("EDGAR_IDENTITY") or sys.exit("EDGAR_IDENTITY is not set: SEC requires 'Name email'.")
     meta_path = DATA / "meta.json"
     prev_meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}

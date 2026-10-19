@@ -71,9 +71,9 @@ the SEC.
 
 Fair access (<https://www.sec.gov/search-filings/edgar-search-assistance/accessing-edgar-data>):
 at most 10 requests a second across all machines, with a declared User-Agent of the form
-`Name email`. `build.py` stays under 8 a second and sends `EDGAR_IDENTITY` as the User-Agent.
+`Name email`. `src/build.py` stays under 8 a second and sends `EDGAR_IDENTITY` as the User-Agent.
 
-Measured 2026-10-19, and handled in `build.py`:
+Measured 2026-10-19, and handled in `src/build.py`:
 
 - SEC's CDN served a day-old `company_tickers_exchange.json` to the plain URL. The build adds a
   cache-buster and refuses a file older than the one the last build used.
@@ -84,7 +84,7 @@ Measured 2026-10-19, and handled in `build.py`:
 
 ## Sector
 
-`sector` is this project's own mapping of SEC SIC codes to 11 sectors plus "Other" (`sectors.py`;
+`sector` is this project's own mapping of SEC SIC codes to 11 sectors plus "Other" (`src/sectors.py`;
 `sector_scheme` in `meta.json`). It is not GICS or any other vendor classification. Funds
 (`ETP`, `Closed-End Fund`) get no sector: a fund files under its trust's or sponsor's SIC (gold
 and bitcoin trusts file under 6221, commodity contracts brokers), which says nothing about what
@@ -98,7 +98,7 @@ it holds.
   500-identifier fee waiver, and say use is not intended to create "a master file or database of
   CUSIP descriptions or numbers". The SEC's own Official List of Section 13(f) Securities is
   marked "No redistribution without permission of CGS". A US ISIN contains the CUSIP. No column
-  holds them, no step fetches them, and `build.py` refuses to publish any value shaped like one.
+  holds them, no step fetches them, and `src/build.py` refuses to publish any value shaped like one.
   A project that holds CUSIPs should map them to FIGIs itself (OpenFIGI `/v3/mapping`) and look
   the FIGI up here.
 - **Nasdaq Trader symbol directory** (`nasdaqlisted.txt`, `otherlisted.txt`). The site terms at

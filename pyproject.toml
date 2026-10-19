@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "security-master"
+version = "0.1.0"
+description = "US exchange-listed stocks, ETFs and closed-end funds keyed by FIGI, with SEC issuer data; cached locally and refreshed from GitHub."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+pandas = ["pandas"]
+
+[project.urls]
+Homepage = "https://github.com/zhuy9/security-master"
+
+# Only the security_master package ships; src/build.py and src/sectors.py build the data and stay in the repo.
+[tool.setuptools.packages.find]
+where = ["src"]
