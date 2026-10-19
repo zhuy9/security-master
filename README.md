@@ -1,16 +1,18 @@
 # security-master
 
-Reference data for US exchange-listed stocks, ETFs and closed-end funds, as two CSV files any
-project can read. Each security is keyed by its FIGI and joined to its issuer's SEC CIK, SIC
-industry code and a sector. Rebuilt every weekday from SEC EDGAR and OpenFIGI. Code is MIT; data
-is CC0, plus the FIGI MIT notice in `data/LICENSE`.
+Reference data for US exchange-listed stocks, ETFs and closed-end funds: about 12,000 securities
+(roughly 5,000 common stocks, 6,000 ETFs and ETNs, plus ADRs, REITs, closed-end funds and MLPs)
+and 6,300 issuers. Each security is keyed by its FIGI and joined to its issuer's SEC CIK, SIC
+industry code and a sector. Rebuilt every weekday from SEC EDGAR and OpenFIGI, and published as two
+CSV files plus a small Python client that caches them. Code is MIT; data is CC0, plus the FIGI MIT
+notice in `data/LICENSE`.
 
 ## Use it
 
 ### Python package
 
 ```sh
-pip install git+https://github.com/zhuy9/security-master          # or: uv add git+https://...
+pip install git+https://github.com/zhuy9/security-master          # or: uv add git+https://github.com/zhuy9/security-master
 pip install "security-master[pandas] @ git+https://github.com/zhuy9/security-master"   # for frame()
 ```
 
@@ -25,7 +27,7 @@ sm.frame()                    # pandas DataFrame of securities joined to issuers
 sm.meta()                     # build date, counts, and the commit the data comes from
 ```
 
-Standard library only. The first call downloads the data (about 2 MB) and caches it in memory and
+Python 3.10+, standard library only. The first call downloads the data (about 2 MB) and caches it in memory and
 in a local cache directory (below), so later calls and other processes are offline lookups. Once
 the copy is an hour old, the next call asks GitHub which commit `main` is at (a small request)
 and, if a new build landed, downloads the files at that commit and swaps them in whole: a
@@ -63,7 +65,7 @@ prototyping, copy `data/` into your project; keep `data/LICENSE` with it.
 ## Lookups
 
 - **By ticker:** `ticker` is in SEC form (`BRK-B`). Turn `BRK.B`, `BRK/B` or `BRK B` into it by
-  replacing `.`, `/` and spaces with `-`. Filter on `status == "active"`: a delisted row keeps its
+  replacing `.`, `/` and spaces with `-` (`sm.security` does this for you). Filter on `status == "active"`: a delisted row keeps its
   old ticker, which another company may have taken since.
 - **By FIGI:** `composite_figi` is the US composite FIGI. It survives ticker changes, so it is
   the key to store.
@@ -137,6 +139,10 @@ about 6. The first build (and every `--full` one) makes about 6,300 SEC requests
 second; later builds fetch only new issuers. A build refuses to write anything if active rows
 fall more than 5%, a ticker is on two active rows, SEC serves an older file than last time, or
 any identifier looks like a CUSIP or ISIN.
+
+Layout: `src/build.py` builds the data (with `src/sectors.py`, the SIC-to-sector table);
+`src/security_master/` is the Python client, the only thing the package ships; `tests/` checks both
+without network; `docs/DATA_SOURCES.md` records each source's terms.
 
 `.github/workflows/refresh.yml` runs it every weekday at 15:17 UTC, refetches every issuer on
 Mondays, and commits `data/` when it changed. It needs the repository secrets `EDGAR_IDENTITY`
