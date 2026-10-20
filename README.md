@@ -39,7 +39,7 @@ cache directory isn't writable, it runs from memory.
 
 | Variable | Default | |
 | --- | --- | --- |
-| `SECURITY_MASTER_TTL` | `3600` | Seconds between checks for a new build. `sm.refresh()` checks now. |
+| `SECURITY_MASTER_TTL` | `3600` | Seconds between checks for a new build. `sm.refresh()` checks now, and raises if it can't. |
 | `SECURITY_MASTER_REF` | | A commit or tag to pin: reproducible results, never refreshes. `sm.meta()["commit"]` gives the current one. |
 | `SECURITY_MASTER_CACHE` | `$XDG_CACHE_HOME/security-master`, else `~/.cache/security-master` | Cache directory |
 

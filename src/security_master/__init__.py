@@ -173,6 +173,8 @@ def _refresh(old: _Snapshot | None, force: bool = False) -> _Snapshot:
         _save(path, fresh)
         return snap
     except (OSError, http.client.HTTPException, ValueError, KeyError, csv.Error) as e:
+        if force:
+            raise  # refresh() was asked to check now, so it says the check failed
         retry = time.time() - _ttl() + 60  # offline, or a build this client can't parse: try again in a minute
         if old is not None:
             return dataclasses.replace(old, checked=retry)
@@ -239,7 +241,8 @@ def frame(active_only: bool = True):
 
 
 def refresh() -> dict:
-    """Check GitHub for a new build now, whatever the TTL. Returns meta()."""
+    """Check GitHub for a new build now, whatever the TTL. Returns meta(). Raises if the check
+    fails; the data in hand keeps serving."""
     global _snapshot
     with _lock:
         _snapshot = _refresh(_snapshot, force=True)

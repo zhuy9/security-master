@@ -162,6 +162,18 @@ def test_offline_serves_the_cache_and_retries_a_minute_later() -> None:
         pass
 
 
+def test_refresh_raises_when_its_check_fails_and_the_data_keeps_serving() -> None:
+    github, _ = fresh()
+    sm.security("AAPL")
+    github.offline = True
+    try:
+        sm.refresh()
+        raise AssertionError("expected URLError")
+    except urllib.error.URLError:
+        pass
+    assert sm.security("AAPL")["cik"] == "0000320193"
+
+
 def test_offline_keeps_serving_memory_even_without_the_disk_copy() -> None:
     github, clock = fresh()
     sm.security("AAPL")
