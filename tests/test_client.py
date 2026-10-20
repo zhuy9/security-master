@@ -212,6 +212,16 @@ def test_a_build_this_client_cannot_parse_is_not_cached_and_old_data_keeps_servi
     assert github.calls == []  # retries a minute later, not on every call
 
 
+def test_a_first_load_that_fails_says_why() -> None:
+    github, _ = fresh()
+    github.head = V3
+    try:
+        sm.security("AAPL")
+        raise AssertionError("expected RuntimeError")
+    except RuntimeError as e:
+        assert "KeyError" in str(e) and "unreachable" not in str(e), e  # a parse failure, not the network
+
+
 def test_other_threads_serve_the_stale_copy_while_one_checks() -> None:
     github, clock = fresh()
     sm.security("AAPL")

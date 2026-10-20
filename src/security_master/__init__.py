@@ -179,7 +179,7 @@ def _refresh(old: _Snapshot | None, force: bool = False) -> _Snapshot:
         if old is not None:
             return dataclasses.replace(old, checked=retry)
         if raw is None:
-            raise RuntimeError("security-master: no cached data yet and GitHub is unreachable") from e
+            raise RuntimeError(f"security-master: no cached data yet, and loading it from GitHub failed: {e!r}") from e
         return _build(raw, None, retry)
 
 
