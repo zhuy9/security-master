@@ -10,8 +10,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from build import (
-    DEAD_TICKER, FORBIDDEN, apply_sectors, check, country, load_dotenv, merge, sec_ticker, security_rows, stale_sec,
-    universe, usable_etp,
+    DEAD_TICKER, FORBIDDEN, apply_sectors, check, country, load_dotenv, merge, read_csv, sec_ticker, security_rows,
+    stale_sec, universe, usable_etp, write_csv,
 )  # fmt: skip
 
 
@@ -26,6 +26,14 @@ def test_load_dotenv_never_overrides_the_environment() -> None:
         assert os.environ["SM_TEST_B"] == "" and os.environ["SM_TEST_C"] == "from-env"
         for key in ("SM_TEST_A", "SM_TEST_B", "SM_TEST_C"):
             del os.environ[key]
+
+
+def test_csv_files_are_utf8_whatever_the_locale() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "issuers.csv"
+        write_csv(path, {"1": {"cik": "1", "name": "Société Générale"}}, ["cik", "name"])
+        assert path.read_bytes().decode("utf-8") == "cik,name\n1,Société Générale\n"  # what the client decodes
+        assert read_csv(path, "cik")["1"]["name"] == "Société Générale"
 
 
 def test_sec_ticker() -> None:

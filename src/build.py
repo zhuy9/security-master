@@ -278,13 +278,14 @@ def check(securities: dict[str, dict], issuers: dict[str, dict], prev_active: in
 def read_csv(path: Path, key: str) -> dict[str, dict]:
     if not path.exists():
         return {}
-    with path.open(newline="") as f:
+    with path.open(newline="", encoding="utf-8") as f:
         return {row[key]: row for row in csv.DictReader(f)}
 
 
 def write_csv(path: Path, rows: dict[str, dict], cols: list[str]) -> None:
-    """Sorted by key, so a daily rebuild diffs only where the data changed."""
-    with path.open("w", newline="") as f:
+    """Sorted by key, so a daily rebuild diffs only where the data changed. UTF-8, which the client
+    decodes, whatever the platform's default."""
+    with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, cols, lineterminator="\n", extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows[k] for k in sorted(rows))
