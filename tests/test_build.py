@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from build import (
+from build import (  # noqa: I001 -- sorted, packed by hand like the fmt: skip below
     DEAD_TICKER, FORBIDDEN, apply_sectors, check, country, load_dotenv, merge, read_csv, sec_ticker, security_rows,
     stale_sec, universe, usable_etp, write_csv,
 )  # fmt: skip

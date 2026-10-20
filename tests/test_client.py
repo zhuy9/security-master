@@ -13,7 +13,7 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-import security_master as sm  # noqa: E402
+import security_master as sm
 
 REAL_HTTP = sm._http  # captured before fresh() swaps in the fake GitHub
 

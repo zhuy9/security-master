@@ -15,10 +15,13 @@
 Run commands from the repository root. On Windows, use `py -3.12` if `python` points to another version.
 
 ```sh
-python -m pip install -e .
+python -m pip install -e . ruff==0.17.1
+ruff check .
 python tests/test_build.py
 python tests/test_client.py
 ```
+
+Ruff runs with its default rules. Don't run `ruff format`: the code is formatted by hand.
 
 Use `import security_master as sm`, then `sm.security("BRK.B")` or `sm.issuer(1067983)`.
 The first lookup downloads data. Later lookups use the cache and check for new data after one hour.

@@ -38,7 +38,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-__all__ = ["security", "issuer", "securities", "issuers", "meta", "frame", "refresh"]
+__all__ = ["frame", "issuer", "issuers", "meta", "refresh", "securities", "security"]
 
 REPO = "zhuy9/security-master"
 FILES = ("meta.json", "securities.csv", "issuers.csv")

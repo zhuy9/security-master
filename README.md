@@ -161,7 +161,8 @@ The package downloads its data from GitHub; the CSV files are not bundled in the
    old release files cannot get mixed in:
 
    ```sh
-   python -m pip install build==1.6.1 twine==7.0.0
+   python -m pip install build==1.6.1 twine==7.0.0 ruff==0.17.1
+   ruff check .
    python tests/test_build.py
    python tests/test_client.py
    python -m build
