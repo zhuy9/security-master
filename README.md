@@ -1,5 +1,10 @@
 # security-master
 
+[![PyPI](https://img.shields.io/pypi/v/security-master)](https://pypi.org/project/security-master/)
+[![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fzhuy9%2Fsecurity-master%2Fmain%2Fpyproject.toml)](https://pypi.org/project/security-master/)
+[![Data updated](https://img.shields.io/github/last-commit/zhuy9/security-master/main?path=data&label=data%20updated)](https://github.com/zhuy9/security-master/commits/main/data)
+[![License](https://img.shields.io/badge/license-MIT%20code%2C%20CC0%20data-blue)](https://github.com/zhuy9/security-master#license)
+
 Reference data for US exchange-listed stocks, ETFs and closed-end funds: about 12,000 securities
 (roughly 5,000 common stocks, 6,000 ETFs and ETNs, plus ADRs, REITs, closed-end funds and MLPs)
 and 6,300 issuers. Each security is keyed by its FIGI and joined to its issuer's SEC CIK, SIC
