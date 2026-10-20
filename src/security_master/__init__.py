@@ -199,7 +199,7 @@ def _current() -> _Snapshot:
         _lock.release()
 
 
-def security(id: str) -> dict | None:
+def security(id: str, /) -> dict | None:
     """A security by composite FIGI or by ticker, in any separator form (BRK.B, BRK/B, BRK B,
     BRK-B). For a ticker, the active row wins over delisted rows that once used it."""
     snap = _current()

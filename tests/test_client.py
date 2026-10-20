@@ -97,6 +97,11 @@ def test_lookups() -> None:
     assert len(sm.issuers()) == 2 and sm.meta() == {"built": "2026-10-21", "commit": V1}
     sm.security("AAPL")["ticker"] = "MUTATED"  # callers get copies
     assert sm.security("AAPL")["ticker"] == "AAPL"
+    try:
+        sm.security(id="AAPL")  # positional-only, so the parameter name is not API
+        raise AssertionError("expected TypeError")
+    except TypeError:
+        pass
 
 
 def test_refreshes_only_after_the_ttl_and_only_downloads_a_new_commit() -> None:
