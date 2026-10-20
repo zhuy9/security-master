@@ -20,7 +20,8 @@ Environment:
     SECURITY_MASTER_TTL    seconds between checks for a new build (default 3600)
     SECURITY_MASTER_REF    a commit or tag to pin; pinned data never refreshes
     SECURITY_MASTER_CACHE  cache directory (default $XDG_CACHE_HOME/security-master, else
-                           ~/.cache/security-master); if it isn't writable, memory only
+                           ~/.cache/security-master); if it isn't writable, or there is no
+                           home directory, memory only
 """
 
 import contextlib
@@ -64,8 +65,12 @@ def _ttl() -> float:
     return float(os.environ.get("SECURITY_MASTER_TTL") or 3600)
 
 
-def _cache_file(pin: str | None) -> Path:
-    root = os.environ.get("SECURITY_MASTER_CACHE") or Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "security-master"
+def _cache_file(pin: str | None) -> Path | None:
+    """None when there is nowhere to cache, so the client runs from memory."""
+    try:
+        root = os.environ.get("SECURITY_MASTER_CACHE") or Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "security-master"
+    except RuntimeError:  # no home directory, e.g. a container running as an arbitrary UID
+        return None
     return Path(root) / (re.sub(r"[^A-Za-z0-9._-]", "_", pin or "main") + ".json")
 
 
@@ -105,11 +110,13 @@ def _touch(path: Path) -> None:
         os.utime(path, (now, now))
 
 
-def _save(path: Path, raw: dict) -> None:
+def _save(path: Path | None, raw: dict) -> None:
     """One file, replaced atomically: no process ever reads a half-updated set. Best effort: a
     read-only cache directory (a container, a Lambda) leaves the client running from memory.
     ponytail: last writer wins, so a slow writer can put back an older commit; that staleness is
     bounded by one TTL."""
+    if path is None:
+        return
     tmp = path.with_name(f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -121,7 +128,9 @@ def _save(path: Path, raw: dict) -> None:
             tmp.unlink()
 
 
-def _read(path: Path) -> dict | None:
+def _read(path: Path | None) -> dict | None:
+    if path is None:
+        return None
     try:
         raw = json.loads(path.read_text())
     except (OSError, ValueError):

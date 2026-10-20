@@ -35,7 +35,7 @@ the copy is an hour old, the next call asks GitHub which commit `main` is at (a 
 and, if a new build landed, downloads the files at that commit and swaps them in whole: a
 long-running service picks up each weekday's build within the hour without restarting. A row you
 already got back never changes. If GitHub is unreachable, the copy in hand keeps serving; if the
-cache directory isn't writable, it runs from memory.
+cache directory isn't writable, or there is no home directory, it runs from memory.
 
 | Variable | Default | |
 | --- | --- | --- |

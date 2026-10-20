@@ -199,6 +199,17 @@ def test_an_unwritable_cache_runs_from_memory_without_redownloading() -> None:
     assert sm.security("AAPL") and sm.security("BRK-B")  # pinned works too, from memory
 
 
+def test_no_home_directory_runs_from_memory() -> None:
+    github, _ = fresh()
+    no_home = RuntimeError("Could not determine home directory.")  # a container running as an arbitrary UID
+    with mock.patch.dict(os.environ), mock.patch.object(sm.Path, "home", side_effect=no_home):
+        for name in ("SECURITY_MASTER_CACHE", "XDG_CACHE_HOME"):
+            os.environ.pop(name, None)
+        assert sm.security("AAPL")["cik"] == "0000320193"
+        sm._snapshot = None  # a new process finds nothing on disk, so it downloads again
+        assert sm.security("AAPL") and github.calls.count("get securities.csv@1") == 2
+
+
 def test_a_build_this_client_cannot_parse_is_not_cached_and_old_data_keeps_serving() -> None:
     github, clock = fresh()
     sm.security("AAPL")
