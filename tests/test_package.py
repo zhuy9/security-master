@@ -20,13 +20,15 @@ def test_package() -> None:
         assert metadata["Name"] == "security-master"
         assert metadata["Requires-Python"] == ">=3.10"
         assert wheel.read("security_master/__init__.py") == client
+        assert "security_master/py.typed" in names  # so type checkers use the hints
         assert all(name.startswith(("security_master/", metadata_name.rsplit("/", 1)[0] + "/")) for name in names)
         license_dir = metadata_name.rsplit("/", 1)[0] + "/licenses/"
         for name in ("LICENSE", "data/LICENSE"):
             assert wheel.read(license_dir + name) == (ROOT / name).read_bytes()
     with tarfile.open(sources[0]) as source:
         names = {name.partition("/")[2] for name in source.getnames()}
-        assert {"pyproject.toml", "README.md", "LICENSE", "data/LICENSE", "src/security_master/__init__.py"} <= names
+        assert {"pyproject.toml", "README.md", "LICENSE", "data/LICENSE", "src/security_master/__init__.py",
+                "src/security_master/py.typed"} <= names  # fmt: skip
         assert all(not name.startswith("data/") or name == "data/LICENSE" for name in names)
         assert not any(name.startswith((".env", ".git/")) for name in names)
         assert not {"src/build.py", "src/sectors.py"} & names
