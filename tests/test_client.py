@@ -1,6 +1,7 @@
 """Checks for the security_master client against a fake GitHub and a fake clock. No network.
 Run: python tests/test_client.py"""
 
+import io
 import json
 import os
 import sys
@@ -9,6 +10,7 @@ import threading
 import types
 import urllib.error
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 import security_master as sm  # noqa: E402
@@ -69,34 +71,17 @@ def fresh(ttl: int = 3600, pin: str | None = None) -> tuple[FakeGitHub, list[flo
 
 
 def test_http_retries_a_dropped_connection_then_gives_up() -> None:
-    import io
-    import urllib.request
-
-    calls, real_urlopen, real_time = [], urllib.request.urlopen, sm.time
-
-    def flaky(url, timeout):
-        calls.append(url)
-        if len(calls) < 3:
-            raise urllib.error.URLError("connection reset")
-        return io.BytesIO(b"data")
-
-    urllib.request.urlopen, sm.time = flaky, types.SimpleNamespace(sleep=lambda s: None)
-    try:
-        assert REAL_HTTP("https://example.org/x") == b"data" and len(calls) == 3
-        calls.clear()
-
-        def down(url, timeout):
-            calls.append(url)
-            raise urllib.error.URLError("down")
-
-        urllib.request.urlopen = down
+    reset = urllib.error.URLError("connection reset")
+    flaky = [reset, reset, io.BytesIO(b"data")]
+    with mock.patch.object(sm, "time"), mock.patch("urllib.request.urlopen", side_effect=flaky) as urlopen:  # no sleeps
+        assert REAL_HTTP("https://example.org/x") == b"data" and urlopen.call_count == 3
+        urlopen.reset_mock()
+        urlopen.side_effect = reset
         try:
             REAL_HTTP("https://example.org/x")
             raise AssertionError("expected URLError after three tries")
         except urllib.error.URLError:
-            assert len(calls) == 3
-    finally:
-        urllib.request.urlopen, sm.time = real_urlopen, real_time
+            assert urlopen.call_count == 3
 
 
 def test_lookups() -> None:

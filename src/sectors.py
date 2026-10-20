@@ -48,18 +48,13 @@ BY_GROUP: dict[int, str] = {
     153: "Consumer Discretionary",  # operative builders: DHI, NVR, PHM
     283: "Health Care",  # drugs and biological products
     284: "Consumer Staples",  # soap, detergents, cosmetics: PG, CL, KMB
-    286: "Materials",  # industrial organic chemicals: IFF, LYB
-    287: "Materials",  # agricultural chemicals: CF, MOS
     357: "Technology",  # computer and office equipment
     367: "Technology",  # electronic components and semiconductors
     368: "Technology",
     369: "Technology",
     # 38 is "instruments" in general, not medical devices, so it splits three ways: 380-382 is
-    # industrial and defence (L3Harris, Ametek, Trane), 383 optical (Coherent, KLA), 384-385
-    # medical. The 4-digit table above carves 3825 and 3826 back out of the industrial block.
-    380: "Industrials",
-    381: "Industrials",
-    382: "Industrials",
+    # industrial and defence (L3Harris, Ametek, Trane) and falls through to 38 below, 383 optical
+    # (Coherent, KLA), 384-385 medical. The 4-digit table above carves 3825 and 3826 back out of 382.
     383: "Technology",  # optical and photographic instruments
     384: "Health Care",  # surgical, orthopedic, dental, x-ray, electromedical
     385: "Health Care",  # ophthalmic goods: ALC, BLCO, COO
@@ -67,19 +62,17 @@ BY_GROUP: dict[int, str] = {
     372: "Industrials",  # aircraft and parts: HON, RTX, TXT
     373: "Industrials",  # ship and boat building: GD, HII
     737: "Technology",  # computer programming and data processing
-    800: "Health Care",  # health services
 }
 
 # 2-digit major group -- the default for everything not named above.
 BY_MAJOR: dict[int, str] = {
-    1: "Other", 2: "Other", 7: "Other", 8: "Other", 9: "Other",  # agriculture, forestry, fishing
     10: "Energy & Mining", 12: "Energy & Mining", 13: "Energy & Mining", 14: "Energy & Mining",
     15: "Industrials", 16: "Industrials", 17: "Industrials",  # construction
     20: "Consumer Staples", 21: "Consumer Staples",  # food, tobacco
     22: "Consumer Discretionary", 23: "Consumer Discretionary", 24: "Consumer Discretionary",
     25: "Consumer Discretionary",  # textiles, apparel, lumber, furniture
     26: "Materials", 27: "Communication",  # paper; printing and publishing
-    28: "Materials",  # chemicals -- 283/286/287 carved out above
+    28: "Materials",  # chemicals -- 283 carved out above
     29: "Energy & Mining",  # petroleum refining
     30: "Materials", 31: "Materials", 32: "Materials", 33: "Materials", 34: "Materials",
     35: "Industrials", 36: "Industrials",  # machinery; electronics -- 357, 367-369 carved out
