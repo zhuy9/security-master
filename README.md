@@ -29,6 +29,37 @@ sm.frame()                    # pandas DataFrame of securities joined to issuers
 sm.meta()                     # build date, counts, and the commit the data comes from
 ```
 
+`sm.security()` and `sm.issuer()` return one row as a dict, or `None` if nothing matches. Every
+value is a string, and an empty string means unknown or not applicable. [Files](#files) explains
+each field. For BRK.B:
+
+```python
+>>> sm.security("BRK.B")
+{'composite_figi': 'BBG000DWG505',
+ 'share_class_figi': 'BBG001S90346',
+ 'ticker': 'BRK-B',
+ 'figi_ticker': 'BRK/B',
+ 'name': 'BERKSHIRE HATHAWAY INC-CL B',
+ 'security_type': 'Common Stock',
+ 'exchange': 'NYSE',
+ 'cik': '0001067983',
+ 'series_id': '',
+ 'class_id': '',
+ 'sector': 'Financials',
+ 'status': 'active',
+ 'first_seen': '2026-10-19',
+ 'last_seen': ''}
+>>> sm.issuer("0001067983")
+{'cik': '0001067983',
+ 'name': 'BERKSHIRE HATHAWAY INC',
+ 'entity_type': 'operating',
+ 'sic': '6331',
+ 'sic_description': 'Fire, Marine & Casualty Insurance',
+ 'state_of_incorporation': 'DE',
+ 'fiscal_year_end': '1231',
+ 'country': 'United States'}
+```
+
 Python 3.10+, standard library only. The first call downloads the data (about 2 MB) and caches it in memory and
 in a local cache directory (below), so later calls and other processes are offline lookups. Once
 the copy is an hour old, the next call asks GitHub which commit `main` is at (a small request)
