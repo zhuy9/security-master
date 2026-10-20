@@ -4,17 +4,19 @@ Reference data for US exchange-listed stocks, ETFs and closed-end funds: about 1
 (roughly 5,000 common stocks, 6,000 ETFs and ETNs, plus ADRs, REITs, closed-end funds and MLPs)
 and 6,300 issuers. Each security is keyed by its FIGI and joined to its issuer's SEC CIK, SIC
 industry code and a sector. Rebuilt every weekday from SEC EDGAR and OpenFIGI, and published as two
-CSV files plus a small Python client that caches them. Code is MIT; data is CC0, plus the FIGI MIT
-notice in `data/LICENSE`.
+CSV files plus a small Python client that caches them. Code is MIT. This project's data contributions
+are CC0; OpenFIGI data carries the FIGI MIT notice. Both data notices are in `data/LICENSE`.
 
 ## Use it
 
 ### Python package
 
 ```sh
-pip install git+https://github.com/zhuy9/security-master          # or: uv add git+https://github.com/zhuy9/security-master
-pip install "security-master[pandas] @ git+https://github.com/zhuy9/security-master"   # for frame()
+pip install security-master
+pip install "security-master[pandas]"   # for frame()
 ```
+
+To install from this checkout, run `pip install .`.
 
 ```python
 import security_master as sm
@@ -41,10 +43,10 @@ cache directory isn't writable, it runs from memory.
 | `SECURITY_MASTER_REF` | | A commit or tag to pin: reproducible results, never refreshes. `sm.meta()["commit"]` gives the current one. |
 | `SECURITY_MASTER_CACHE` | `$XDG_CACHE_HOME/security-master`, else `~/.cache/security-master` | Cache directory |
 
-Pin the client code itself to a tag or commit: `pip install git+https://github.com/zhuy9/security-master@<tag-or-commit>`.
-To update an unpinned install, `pip install --force-reinstall --no-deps git+https://github.com/zhuy9/security-master`
-(plain `pip install -U` keeps the old code while the version number is unchanged), or with uv,
-`uv lock --upgrade-package security-master`. The data refreshes on its own either way.
+The version pins the client code, not the data. The weekday data job can keep updating the CSV
+files without a new package release. Use `SECURITY_MASTER_REF` to pin the data too.
+To get a newer client release, run `pip install --upgrade security-master`, or with uv,
+`uv lock --upgrade-package security-master`. Update any version pin in your project's requirements too.
 
 ### Any language: the CSV files
 
@@ -149,10 +151,42 @@ without network; `docs/DATA_SOURCES.md` records each source's terms.
 Mondays, and commits `data/` when it changed. It needs the repository secrets `EDGAR_IDENTITY`
 and `OPENFIGI_API_KEY`.
 
+## Publish a release
+
+Release the Python client when its code changes. The daily data refresh does not need a release.
+The package downloads its data from GitHub; the CSV files are not bundled in the package.
+
+1. Set `version` in `pyproject.toml` to one not yet on PyPI, which does not let you replace an
+   uploaded file. Run these checks from the repository root, using an empty `dist/` directory so
+   old release files cannot get mixed in:
+
+   ```sh
+   python -m pip install build==1.6.1 twine==7.0.0
+   python tests/test_build.py
+   python tests/test_client.py
+   python -m build
+   python -m twine check --strict dist/*
+   python tests/test_package.py
+   ```
+
+2. Commit the changes and push them to `main` when you are ready.
+3. To check the workflow before publishing, open **Actions > release > Run workflow** on GitHub.
+   This runs the tests and builds the package. It does not upload to PyPI.
+4. Open **Releases > Draft a new release**. Create the tag `v` plus that version, such as
+   `v0.1.0`, from `main`, then click **Publish release**. This starts
+   `.github/workflows/release.yml` and uploads the package to PyPI after its checks pass.
+5. Wait for the `release` workflow to finish, then check the
+   [PyPI project page](https://pypi.org/project/security-master/) and run
+   `pip install security-master==<version>`.
+
 ## License
 
-Code: MIT (`LICENSE`). Data: CC0 1.0, with the FIGI MIT notice (`data/LICENSE`). Sources and
-their terms: `docs/DATA_SOURCES.md`.
+Code: MIT (`LICENSE`). This project's data contributions: CC0 1.0. OpenFIGI identifiers and metadata
+carry the FIGI MIT notice. Sources and their terms: `docs/DATA_SOURCES.md`.
+
+Keep [data/LICENSE](https://github.com/zhuy9/security-master/blob/main/data/LICENSE) with any
+redistributed CSV files, caches, or exports. Both code and data notices are included in the Python
+package's license files.
 
 Not affiliated with or endorsed by the SEC, Bloomberg, or any exchange. Provided as is, with no
 warranty. Not investment advice.

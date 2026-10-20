@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==84.2.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "US exchange-listed stocks, ETFs and closed-end funds keyed by FIGI, with SEC issuer data; cached locally and refreshed from GitHub."
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "data/LICENSE"]
 requires-python = ">=3.10"
 dependencies = []
 
