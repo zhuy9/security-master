@@ -390,6 +390,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000101829,RTX Corp,operating,3724,Aircraft Engines & Engine Parts,DE,1231,United States
 0000101984,UNIVERSAL ELECTRONICS INC,operating,3651,Household Audio & Video Equipment,DE,1231,United States
 0000102037,UNIVERSAL CORP /VA/,operating,5150,Wholesale-Farm Product Raw Materials,VA,0331,United States
+0000102109,"DeFi Capital Markets, Inc.",operating,5065,"Wholesale-Electronic Parts & Equipment, NEC",MD,1231,United States
 0000102212,UNIVEST FINANCIAL Corp,operating,6022,State Commercial Banks,PA,1231,United States
 0000102426,"SRH Total Return Fund, Inc.",other,,,MD,1130,United States
 0000102729,VALMONT INDUSTRIES INC,operating,3440,Fabricated Structural Metal Products,DE,1226,United States
@@ -2363,6 +2364,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001338561,Nuveen S&P 500 Dynamic Overwrite Fund,other,,,MA,,United States
 0001338940,Perion Network Ltd.,other,7371,Services-Computer Programming Services,Israel,1231,Israel
 0001339005,FEMASYS INC,operating,3841,Surgical & Medical Instruments & Apparatus,DE,1231,United States
+0001339688,Lion Copper Corp.,operating,1000,Metal Mining,"British Columbia, Canada",1231,Canada
 0001339970,aTYR PHARMA INC,operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001340677,SILVERCORP METALS INC,other,1040,Gold and Silver Ores,"British Columbia, Canada",0331,Canada
 0001340736,Eaton Vance Tax-Managed Diversified Equity Income Fund,other,,,,1031,United States
@@ -2403,6 +2405,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001353614,Invesco CurrencyShares Australian Dollar Trust,operating,6221,Commodity Contracts Brokers & Dealers,NY,1231,United States
 0001353615,Invesco CurrencyShares Swiss Franc Trust,operating,6221,Commodity Contracts Brokers & Dealers,NY,1231,United States
 0001354866,Byrna Technologies Inc.,operating,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",DE,1130,United States
+0001355064,MUTUAL FUND SERIES TRUST,investment,,,OH,0630,United States
 0001355444,EMBRAER S.A.,other,3721,Aircraft,,,Brazil
 0001355839,INTELLIGENT PROTECTION MANAGEMENT CORP.,operating,7370,"Services-Computer Programming, Data Processing, Etc.",DE,1231,United States
 0001355848,"Kartoon Studios, Inc.",operating,7812,Services-Motion Picture & Video Tape Production,NV,1231,United States
@@ -5055,6 +5058,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001879016,Ivanhoe Electric Inc.,operating,1000,Metal Mining,DE,1231,United States
 0001879238,BondBloxx ETF Trust,investment,,,DE,,United States
 0001879248,Ads-Tec Energy Public Ltd Co,other,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",Ireland,1231,Ireland
+0001879403,La Rosa Holdings Corp.,operating,6531,Real Estate Agents & Managers (For Others),NV,1231,United States
 0001879726,Sidus Space Inc.,operating,4812,Radiotelephone Communications,DE,1231,United States
 0001879754,EShallGo Inc.,other,7359,"Services-Equipment Rental & Leasing, NEC",Cayman Islands,0331,China
 0001880319,"Perimeter Solutions, Inc.",operating,2800,Chemicals & Allied Products,,1231,United States
@@ -5757,7 +5761,9 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002038439,"VisionWave Holdings, Inc.",operating,7372,Services-Prepackaged Software,DE,0930,United States
 0002039058,Jackson Acquisition Co II,operating,6770,Blank Checks,,1231,United States
 0002039060,Robin Energy Ltd.,other,4412,Deep Sea Foreign Transportation of  Freight,Marshall Islands,1231,Cyprus
+0002039072,DAVION HEALTHCARE PLC,other,3841,Surgical & Medical Instruments & Apparatus,Cyprus,1231,Ireland
 0002039273,Jaguar Uranium Corp.,operating,1000,Metal Mining,"British Columbia, Canada",1231,Canada (Federal Level)
+0002039461,Canary Litecoin ETF,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
 0002039497,"Resolute Holdings Management, Inc.",operating,6199,Finance Services,NV,1231,United States
 0002039505,Canary XRP ETF,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
 0002039525,Bitwise XRP ETF,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
@@ -6146,6 +6152,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002101470,Wilco 63 Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002101562,PALOMA ACQUISITION CORP I,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002101698,Elmet Group Co.,operating,3490,Miscellaneous Fabricated Metal Products,DE,0101,United States
+0002101833,"Forge Nano Holdings, Inc.",other,3559,"Special Industry Machinery, NEC",DE,1231,United States
 0002102041,Inflection Point Acquisition Corp. VI,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002102123,Apogee Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002102155,Quantum Leap Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
