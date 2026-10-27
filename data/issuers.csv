@@ -4469,6 +4469,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001806310,"Taysha Gene Therapies, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001806347,Westrock Coffee Co,operating,2080,Beverages,DE,1231,United States
 0001806524,Lion Group Holding Ltd,other,6211,"Security Brokers, Dealers & Flotation Companies",Cayman Islands,1231,Singapore
+0001806540,"Lycia Therapeutics, Inc.",other,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001806837,"Vertex, Inc.",operating,7372,Services-Prepackaged Software,DE,1231,United States
 0001806904,EZGO Technologies Ltd.,other,3751,"Motorcycles, Bicycles & Parts","Virgin Islands, British",0930,China
 0001806952,"Lyell Immunopharma, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
@@ -5950,6 +5951,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002076163,"Silvia, Inc.",operating,6199,Finance Services,DE,1231,United States
 0002076192,Westin Acquisition Corp,operating,8011,Services-Offices & Clinics of  Doctors of  Medicine,Cayman Islands,0630,Singapore
 0002076427,Galata Acquisition Corp. II,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002076561,Pine Tree Acquisition Corp.,other,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002076616,Tailwind 2.0 Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002076739,SC II Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002076975,Braiin Ltd,other,7374,Services-Computer Processing & Data Preparation,Australia,0630,Australia
@@ -6096,6 +6098,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002093507,Greenland Energy Co,operating,1381,Drilling Oil & Gas Wells,TX,1231,United States
 0002093524,Aperture AC,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002093536,"Arxis, Inc.",operating,3728,"Aircraft Parts & Auxiliary Equipment, NEC",DE,1231,United States
+0002093856,APEX CRITICAL METALS CORP.,other,1000,Metal Mining,"British Columbia, Canada",0731,Canada
 0002093912,Praetorian Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002094073,Clearthink 1 Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002094076,Starlink AI Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,0131,United States
