@@ -1487,6 +1487,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001023024,ANI PHARMACEUTICALS INC,operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001023128,LITHIA MOTORS INC,operating,5500,Retail-Auto Dealers & Gasoline Stations,OR,1231,United States
 0001023313,"FORRESTER RESEARCH, INC.",operating,8700,"Services-Engineering, Accounting, Research, Management",DE,1231,United States
+0001023391,FMI FUNDS INC,investment,,,MD,0930,United States
 0001023512,DRDGOLD LTD,other,1040,Gold and Silver Ores,,0630,South Africa
 0001023514,HARMONY GOLD MINING CO LTD,other,1040,Gold and Silver Ores,,0630,South Africa
 0001023549,XTL BIOPHARMACEUTICALS LTD,other,2834,Pharmaceutical Preparations,Israel,,United States
