@@ -1,6 +1,7 @@
 # security-master
 
 [![PyPI](https://img.shields.io/pypi/v/security-master)](https://pypi.org/project/security-master/)
+[![GitHub tag](https://img.shields.io/github/v/tag/zhuy9/security-master)](https://github.com/zhuy9/security-master/releases)
 [![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fzhuy9%2Fsecurity-master%2Fmain%2Fpyproject.toml)](https://pypi.org/project/security-master/)
 [![Data updated](https://img.shields.io/github/last-commit/zhuy9/security-master/main?path=data&label=data%20updated)](https://github.com/zhuy9/security-master/commits/main/data)
 [![License](https://img.shields.io/badge/license-MIT%20code%2C%20CC0%20data-blue)](https://github.com/zhuy9/security-master#license)
@@ -216,7 +217,7 @@ The package downloads its data from GitHub; the CSV files are not bundled in the
 3. To check the workflow before publishing, open **Actions > release > Run workflow** on GitHub.
    This runs the tests and builds the package. It does not upload to PyPI.
 4. Open **Releases > Draft a new release**. Create the tag `v` plus that version, such as
-   `v0.1.0`, from `main`, then click **Publish release**. This starts
+   `v0.1.1`, from `main`, then click **Publish release**. This starts
    `.github/workflows/release.yml` and uploads the package to PyPI after its checks pass.
 5. Wait for the `release` workflow to finish, then check the
    [PyPI project page](https://pypi.org/project/security-master/) and run
