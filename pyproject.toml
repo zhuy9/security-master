@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "security-master"
-version = "0.1.0"
+version = "0.1.1"
 description = "US exchange-listed stocks, ETFs and closed-end funds keyed by FIGI, with SEC issuer data; cached locally and refreshed from GitHub."
 readme = "README.md"
 license = "MIT"

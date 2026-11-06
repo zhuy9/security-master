@@ -1,9 +1,9 @@
-"""SIC code -> sector: this project's own mapping of SEC Standard Industrial Classification codes to
-11 sectors plus "Other". It is not GICS or any other vendor scheme.
+"""Issuer -> sector: reviewed CIK exceptions, then this project's own mapping of SEC Standard
+Industrial Classification codes to 11 sectors plus "Other". It is not a vendor scheme.
 
 SIC is the only industry code the SEC publishes per issuer, and it is coarse: one code can hold a
 test-equipment maker, a software company and a defence contractor. Expect misses where the filing
-code is a catch-all: Accenture and Akamai file under 7389 and land in Financials.
+code is a catch-all. A reviewed issuer exception corrects one company without changing its peers.
 
 The table follows SIC's own hierarchy, so it is read most-specific-first, like the code itself:
 
@@ -14,6 +14,20 @@ The table follows SIC's own hierarchy, so it is read most-specific-first, like t
 Put an entry at the coarsest level that is right. A 4-digit exception names the companies that
 justify it.
 """
+
+SECTOR_SCHEME = "sic11-v2"
+SECTORS = {
+    "Communication", "Consumer Discretionary", "Consumer Staples", "Energy & Mining", "Financials",
+    "Health Care", "Industrials", "Materials", "Real Estate", "Technology", "Utilities", "Other",
+}
+
+# CIK -> (expected SIC, sector). Evidence and approval: docs/adr/0001-issuer-sector-overrides.md.
+BY_CIK: dict[str, tuple[int, str]] = {
+    "0001086222": (7389, "Technology"),  # Akamai: security, cloud computing and delivery
+    "0001467373": (7389, "Technology"),  # Accenture: technology consulting and managed services
+    "0001543151": (7389, "Industrials"),  # Uber: mobility, delivery and freight, classified by transport activity
+    "0001577552": (7389, "Consumer Discretionary"),  # Alibaba: commerce-led business alongside cloud
+}
 
 # 4-digit industry. Exceptions to the group or major group above them.
 BY_INDUSTRY: dict[int, str] = {
@@ -36,7 +50,7 @@ BY_INDUSTRY: dict[int, str] = {
     7320: "Financials",  # credit reporting and ratings: SPGI, MCO
     7370: "Communication",  # the group says Technology; the big names here are media: GOOG, META
     # 7389 "Business Services, NEC" is a catch-all; the payment networks file here (Visa, Mastercard,
-    # PayPal, FIS, Fiserv, Global Payments). Accenture and Akamai land here too and stay wrong.
+    # PayPal, FIS, Fiserv, Global Payments). Reviewed exceptions belong in BY_CIK, not this default.
     7389: "Financials",
     7900: "Communication",  # amusement and recreation: LYV, TKO
     8731: "Health Care",  # commercial biological research: IQV, CRL, INCY

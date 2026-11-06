@@ -127,7 +127,7 @@ prototyping, copy `data/` into your project; keep `data/LICENSE` with it.
 | `exchange` | SEC's listing label: `Nasdaq`, `NYSE` (which includes NYSE American and NYSE Arca), `CBOE`, `TXSE`. Blank where SEC doesn't say, which is most ETFs. |
 | `cik` | Issuer's SEC CIK, 10 digits. For a fund, its trust's CIK. Blank if SEC has no match. |
 | `series_id`, `class_id` | SEC series and class of a 1940-Act fund |
-| `sector` | This project's sector from the issuer's SIC code (below). Blank for funds, and for the few issuers without a SIC (mostly business development companies). |
+| `sector` | This project's sector from the issuer's SIC code and reviewed CIK exceptions (below). Blank for funds, and for the few issuers without a SIC (mostly business development companies). |
 | `status` | `active`, or `delisted` once it drops out. Rows are never deleted. |
 | `first_seen` | First build that listed it. The dataset starts 2026-10-19, so this is not a listing date. |
 | `last_seen` | For delisted rows, the last build that listed it. Blank while active. |
@@ -145,11 +145,15 @@ shows listings, delistings and renames day by day.
 
 ## Caveats
 
-- `sector` is this project's mapping of SEC SIC codes to 11 sectors plus `Other` (`src/sectors.py`),
-  not GICS or any vendor scheme. SIC is coarse: Alphabet and Meta file under 7370 (here
-  Communication), Visa and Mastercard under 7389 (Financials), and Accenture and Akamai under
-  7389 too, where Financials is wrong for them. `sic` is in `issuers.csv` if you want your own
-  mapping.
+- `sector` is this project's mapping of SEC SIC codes to 11 sectors plus `Other`, with reviewed
+  issuer exceptions (`src/sectors.py`), not GICS or any vendor scheme. SIC is coarse: Visa and
+  Mastercard share 7389 with Accenture and Akamai. In `sic11-v2`, the payment default stays
+  Financials; CIK exceptions place Accenture and Akamai in Technology, Uber in Industrials and
+  Alibaba in Consumer Discretionary. [ADR 0001](docs/adr/0001-issuer-sector-overrides.md) records
+  the decisions and evidence. [Instrument checks](tests/fixtures/sector_cases.csv) pin approved
+  expectations; [the review queue](docs/SECTOR_REVIEW.md) tracks unresolved cases. Source `sic`
+  remains in `issuers.csv` for alternative mappings. Historical rows use the current scheme,
+  not the classification known at their original dates.
 - In scope: common stock, ADRs, REITs, MLPs and partnerships, closed-end funds, ETFs and ETNs
   listed on a US exchange. Out: preferreds, warrants, units, rights, notes, OTC, mutual funds.
 - Stocks and closed-end funds are the tickers SEC lists on a US exchange that OpenFIGI types as
@@ -166,7 +170,7 @@ shows listings, delistings and renames day by day.
 
 ```sh
 cp .env.example .env   # then fill in EDGAR_IDENTITY and OPENFIGI_API_KEY
-python tests/test_build.py && python tests/test_client.py
+python tests/test_build.py && python tests/test_sectors.py && python tests/test_client.py
 python src/build.py    # --full refetches every issuer
 ```
 
@@ -175,7 +179,8 @@ environment win. SEC requires `EDGAR_IDENTITY` as the User-Agent. The
 OpenFIGI key is free and optional, but without it a daily build takes about 50 minutes instead of
 about 6. The first build (and every `--full` one) makes about 6,300 SEC requests at up to 8 a
 second; later builds fetch only new issuers. A build refuses to write anything if active rows
-fall more than 5%, a ticker is on two active rows, or any identifier looks like a CUSIP or ISIN.
+fall more than 5%, a ticker is on two active rows, any identifier looks like a CUSIP or ISIN,
+or a sector override has an invalid CIK/sector, a missing issuer or a changed SIC.
 If SEC's CDN hands it older ticker files than the last build used, it keeps the last build and
 passes with a warning, failing only once the data is more than 4 days old.
 
@@ -200,6 +205,7 @@ The package downloads its data from GitHub; the CSV files are not bundled in the
    python -m pip install build==1.6.1 twine==7.0.0 ruff==0.17.1
    ruff check .
    python tests/test_build.py
+   python tests/test_sectors.py
    python tests/test_client.py
    python -m build
    python -m twine check --strict dist/*

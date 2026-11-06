@@ -6,13 +6,15 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from build import (  # noqa: I001 -- sorted, packed by hand like the fmt: skip below
-    DEAD_TICKER, FORBIDDEN, apply_sectors, check, country, load_dotenv, merge, read_csv, sec_ticker, security_rows,
+    DEAD_TICKER, FORBIDDEN, apply_sectors, check, check_sector_overrides, country, load_dotenv, merge, read_csv, sec_ticker, security_rows,
     stale_sec, universe, usable_etp, write_csv,
 )  # fmt: skip
+from sectors import BY_CIK
 
 
 def test_load_dotenv_never_overrides_the_environment() -> None:
@@ -95,6 +97,48 @@ def test_sector_comes_from_issuer_sic_except_for_funds() -> None:
     assert {k: r["sector"] for k, r in securities.items()} == {"s": "Technology", "f": "", "c": "", "n": "", "x": ""}
 
 
+def test_sector_override_does_not_hide_missing_or_changed_sic() -> None:
+    cik = "0001086222"
+    securities = {"s": {"cik": cik, "security_type": "Common Stock"}}
+    apply_sectors(securities, {cik: {"sic": "7370"}})
+    assert securities["s"]["sector"] == "Communication"  # stale override falls back, then validation refuses publication
+    apply_sectors(securities, {cik: {"sic": ""}})
+    assert securities["s"]["sector"] == ""
+    apply_sectors(securities, {})
+    assert securities["s"]["sector"] == ""
+
+
+def test_sector_override_applies_to_all_eligible_figis_but_never_funds() -> None:
+    cik = "0001467373"
+    securities = {
+        "common": {"cik": cik, "security_type": "Common Stock", "status": "active"},
+        "adr": {"cik": cik, "security_type": "ADR", "status": "active"},
+        "old": {"cik": cik, "security_type": "Common Stock", "status": "delisted"},
+        "etp": {"cik": cik, "security_type": "ETP", "status": "active"},
+        "cef": {"cik": cik, "security_type": "Closed-End Fund", "status": "active"},
+    }
+    apply_sectors(securities, {cik: {"sic": "7389"}})
+    assert {k: r["sector"] for k, r in securities.items()} == {
+        "common": "Technology", "adr": "Technology", "old": "Technology", "etp": "", "cef": "",
+    }
+
+
+def test_sector_override_validation() -> None:
+    cik = "0001086222"
+    with mock.patch("build.BY_CIK", {cik: (7389, "Technology")}):
+        assert check_sector_overrides({cik: {"sic": "7389"}}) == []
+        assert any("missing" in p for p in check_sector_overrides({}))
+        for sic in ("7370", ""):
+            assert any("SIC changed" in p for p in check_sector_overrides({cik: {"sic": sic}}))
+        assert any("SIC changed" in p for p in check_sector_overrides({cik: {}}))
+    with mock.patch("build.BY_CIK", {cik: (100, "Materials")}):
+        assert check_sector_overrides({cik: {"sic": "0100"}}) == []
+    with mock.patch("build.BY_CIK", {"1086222": (7389, "Technlogy")}):
+        problems = check_sector_overrides({"1086222": {"sic": "7389"}})
+        assert any("10 decimal digits" in p for p in problems)
+        assert any("unknown sector" in p for p in problems)
+
+
 def test_universe_prefers_the_sec_listed_line_for_a_reused_ticker() -> None:
     listed = {"BBG000NEW001": {"ticker": "XYZ", "securityType": "Common Stock"}}
     etps = {
@@ -117,13 +161,15 @@ def test_check() -> None:
                 "name": "ISHARES MIDCAP400 BUFFER100", "status": status}  # fmt: skip
 
     good = {f"F{i}": row(f"BBG00000000{i}", f"T{i}") for i in range(100)}
-    assert check(good, {}, prev_active=100) == []  # 9-character words in a name are not CUSIPs
-    assert any("fell" in p for p in check(good, {}, prev_active=200))
-    assert any("more than one" in p for p in check({**good, "D": row("BBG0000000D1", "T1")}, {}, prev_active=0))
-    assert check({**good, "D": row("BBG0000000D1", "T1", "delisted")}, {}, prev_active=0) == []
+    issuers = {cik: {"cik": cik, "sic": str(sic)} for cik, (sic, _) in BY_CIK.items()}
+    assert check(good, issuers, prev_active=100) == []  # 9-character words in a name are not CUSIPs
+    assert any("missing" in p for p in check(good, {}, prev_active=100))
+    assert any("fell" in p for p in check(good, issuers, prev_active=200))
+    assert any("more than one" in p for p in check({**good, "D": row("BBG0000000D1", "T1")}, issuers, prev_active=0))
+    assert check({**good, "D": row("BBG0000000D1", "T1", "delisted")}, issuers, prev_active=0) == []
     leaky = {**good, "L": {**row("BBG0000000L1", "L"), "share_class_figi": "12345ABC9"}}
-    assert any("CUSIP" in p for p in check(leaky, {}, prev_active=0))
-    assert any("CUSIP" in p for p in check(good, {"1": {"cik": "1", "ein": "US12345ABC90"}}, prev_active=0))
+    assert any("CUSIP" in p for p in check(leaky, issuers, prev_active=0))
+    assert any("CUSIP" in p for p in check(good, {**issuers, "1": {"cik": "1", "ein": "US12345ABC90"}}, prev_active=0))
 
 
 def test_country_reads_both_sec_address_formats() -> None:

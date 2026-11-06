@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main # the branch tip, not the triggering commit: a queued or re-run job must build on the latest data
-      - run: python3 tests/test_build.py && python3 tests/test_client.py
+      - run: python3 tests/test_build.py && python3 tests/test_sectors.py && python3 tests/test_client.py
       - name: Build
         env:
           EDGAR_IDENTITY: ${{ secrets.EDGAR_IDENTITY }}

@@ -1,0 +1,56 @@
+composite_figi,ticker,cik,security_type,sic,expected_sector,purpose
+BBG000BGYMH7,MLM,0000916076,Common Stock,1400,Materials,1400 industry exception: aggregates
+BBG000C5HS04,NKE,0000320187,Common Stock,3021,Consumer Discretionary,3021 industry exception: footwear
+BBG000BT7JW9,SNA,0000091440,Common Stock,3420,Industrials,3420 industry exception: tools
+BBG000CGC1X8,QCOM,0000804328,Common Stock,3663,Technology,3663 industry exception: communications chips
+BBG000BWM083,AEHR,0001040470,Common Stock,3825,Technology,3825 industry exception: semiconductor test
+BBG000C2V3D6,A,0001090872,Common Stock,3826,Health Care,3826 industry exception: life-science instruments
+BBG000BMTFR4,KLAC,0000319201,Common Stock,3827,Technology,3827 industry exception: semiconductor inspection
+BBG000BPRN29,ONTO,0000704532,Common Stock,3829,Technology,3829 industry exception: semiconductor metrology
+BBG000BF6LY3,CCL,0000815097,Common Stock,4400,Consumer Discretionary,4400 industry exception: cruise operator
+BBG000BLBVN4,BKNG,0001075531,Common Stock,4700,Consumer Discretionary,4700 industry exception: online travel
+BBG0019JZ882,KMI,0001506307,Common Stock,4922,Energy & Mining,4922 industry exception: pipelines
+BBG000BWVSR1,WM,0000823768,Common Stock,4953,Industrials,4953 industry exception: waste collection
+BBG000DYGNW7,MCK,0000927653,Common Stock,5122,Health Care,5122 industry exception: drug distribution
+BBG000BWXBC2,WMT,0000104169,Common Stock,5331,Consumer Staples,5331 industry exception: staples retailer
+BBG000CH5208,UNH,0000731766,Common Stock,6324,Health Care,6324 industry exception: health insurance
+BBG000B9Z0J8,PLD,0001045609,REIT,6798,Real Estate,6798 industry exception: equity REIT
+BBG000BP1Q11,SPGI,0000064040,Common Stock,7320,Financials,7320 industry exception: ratings and financial data
+BBG009S3NB30,GOOG,0001652044,Common Stock,7370,Communication,7370 industry exception: advertising; Alphabet class C
+BBG009S39JX6,GOOGL,0001652044,Common Stock,7370,Communication,Alphabet class A shares use same CIK and sector
+BBG000MM2P62,META,0001326801,Common Stock,7370,Communication,7370 industry exception: advertising
+BBG000PSKYX7,V,0001403161,Common Stock,7389,Financials,7389 payment network retains default
+BBG000F1ZSQ2,MA,0001141391,Common Stock,7389,Financials,7389 payment network retains default
+BBG0077VNXV6,PYPL,0001633917,Common Stock,7389,Financials,7389 payments retains default
+BBG000FQ7YR4,LYV,0001335258,Common Stock,7900,Communication,7900 industry exception: live entertainment
+BBG00333FYS2,IQV,0001478242,Common Stock,8731,Health Care,8731 industry exception: clinical research
+BBG000D9D830,ACN,0001467373,Common Stock,7389,Technology,Approved v2 CIK exception: technology consulting
+BBG000BJQWD2,AKAM,0001086222,Common Stock,7389,Technology,Approved v2 CIK exception: cloud and cybersecurity
+BBG002B04MT8,UBER,0001543151,Common Stock,7389,Industrials,Approved v2 CIK exception: transportation platform
+BBG006G2JVL2,BABA,0001577552,ADR,7389,Consumer Discretionary,Approved v2 CIK exception: commerce; ADR
+BBG000BN5HF7,LEN,0000920760,Common Stock,1520,Consumer Discretionary,152 industry-group fallback: homebuilder
+BBG000DQTXY6,DHI,0000882184,Common Stock,1531,Consumer Discretionary,153 industry-group fallback: homebuilder
+BBG000BR2B91,PFE,0000078003,Common Stock,2834,Health Care,283 industry-group fallback: pharmaceuticals
+BBG000BR2TH3,PG,0000080424,Common Stock,2840,Consumer Staples,284 industry-group fallback: household products
+BBG000B9XRY4,AAPL,0000320193,Common Stock,3571,Technology,357 industry-group fallback: computers
+BBG000BBJQV0,NVDA,0001045810,Common Stock,3674,Technology,367 industry-group fallback: semiconductors
+BBG00NPWH832,ALC,0001167379,Common Stock,3851,Health Care,385 industry-group fallback: ophthalmic goods
+BBG000BW8S60,RTX,0000101829,Common Stock,3724,Industrials,372 industry-group fallback: aircraft and defense
+BBG000BK67C7,GD,0000040533,Common Stock,3730,Industrials,373 industry-group fallback: shipbuilding
+BBG000BPH459,MSFT,0000789019,Common Stock,7372,Technology,737 industry-group fallback: software
+BBG01FND0CC1,LIN,0001707925,Common Stock,2810,Materials,28 major-group fallback: industrial gases
+BBG000BZ9223,EOG,0000821189,Common Stock,1311,Energy & Mining,13 major-group fallback: oil and gas production
+BBG000BF0K17,CAT,0000018230,Common Stock,3531,Industrials,35 major-group fallback: heavy machinery
+BBG000BJSBJ0,NEE,0000753308,Common Stock,4911,Utilities,49 major-group fallback: electric utility
+BBG000DMBXR2,JPM,0000019617,Common Stock,6021,Financials,60 major-group fallback: bank
+BBG000DWCFL4,BRK-A,0001067983,Common Stock,6331,Financials,63 major-group fallback; Berkshire class A
+BBG000DWG505,BRK-B,0001067983,Common Stock,6331,Financials,Berkshire class B shares use same CIK and sector
+BBG000BMX289,KO,0000021344,Common Stock,2080,Consumer Staples,20 major-group fallback: beverages
+BBG000QW7VC1,HCA,0000860730,Common Stock,8062,Health Care,80 major-group fallback: hospitals
+BBG000C04224,CBRE,0001138118,Common Stock,6500,Real Estate,65 major-group fallback: real estate services
+BBG000BPH299,TM,0001094517,ADR,3711,Consumer Discretionary,37 major-group fallback: automobiles; ADR
+BBG000BDSLD7,SAP,0001000184,ADR,7372,Technology,737 industry-group fallback: software; ADR
+BBG000BDTBL9,SPY,0000884394,ETP,,,ETP remains blank with no SIC
+BBG000CRF6Q8,GLD,0001222333,ETP,6221,,ETP remains blank despite financial SIC
+BBG002Q8P7Z8,PDI,0001510599,Closed-End Fund,,,Closed-end fund remains blank
+BBG000BXT422,MAIN,0001396440,Common Stock,,,Operating security with missing issuer SIC remains blank

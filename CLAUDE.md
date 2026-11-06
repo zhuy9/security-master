@@ -18,6 +18,7 @@ Run commands from the repository root. On Windows, use `py -3.12` if `python` po
 python -m pip install -e . ruff==0.17.1
 ruff check .
 python tests/test_build.py
+python tests/test_sectors.py
 python tests/test_client.py
 ```
 
@@ -55,6 +56,9 @@ python tests/test_package.py
 - Composite FIGI is the security key. Tickers can change or be reused. Active rows win ticker lookups.
 - Preserve leading zeros in CIKs. A delisted row stays in the dataset.
 - Never distribute CUSIPs or ISINs. Keep their mapping in the consuming project.
-- Sectors are this project's SIC mapping, not GICS. Funds can have no sector or issuer match.
+- Sectors are this project's SIC mapping with reviewed CIK exceptions, not GICS. Funds can have no sector or issuer match.
+- Record sector decisions in `docs/adr/0001-issuer-sector-overrides.md`. Keep named regression
+  instruments in `tests/fixtures/sector_cases.csv` and pending candidates in `docs/SECTOR_REVIEW.md`.
+- Propose and obtain approval for further classification changes before publishing them.
 - Preserve the build checks for missing rows, duplicate active tickers, stale SEC files, and restricted identifiers.
 - The package contains the client, not the CSV files or data builder. Keep secrets out of release files.

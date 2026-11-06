@@ -30,6 +30,7 @@ jobs:
       - name: Test
         run: |
           python tests/test_build.py
+          python tests/test_sectors.py
           python tests/test_client.py
       - name: Build and check package
         run: |

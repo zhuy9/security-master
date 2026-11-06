@@ -87,11 +87,18 @@ Measured 2026-10-19, and handled in `src/build.py`:
 
 ## Sector
 
-`sector` is this project's own mapping of SEC SIC codes to 11 sectors plus "Other" (`src/sectors.py`;
-`sector_scheme` in `meta.json`). It is not GICS or any other vendor classification. Funds
+`sector` is this project's own mapping of SEC SIC codes to 11 sectors plus "Other", with reviewed
+CIK exceptions (`src/sectors.py`; `sector_scheme` in `meta.json`). It is not GICS or any other vendor classification. Funds
 (`ETP`, `Closed-End Fund`) get no sector: a fund files under its trust's or sponsor's SIC (gold
 and bitcoin trusts file under 6221, commodity contracts brokers), which says nothing about what
 it holds.
+
+[ADR 0001](adr/0001-issuer-sector-overrides.md) records the approved issuer exceptions, original
+business rationales, filing URLs, document dates and review date. The exceptions are original
+project decisions under the existing CC0 data contribution terms. They use business facts from
+primary filings, not a vendor's sector assignments. Store citations and short original rationales;
+do not reproduce filing descriptions or assume all third-party material on sec.gov is cleared
+for redistribution. A new evidence source needs its terms reviewed here before use.
 
 ## Not used, and why
 

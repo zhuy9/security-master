@@ -31,7 +31,7 @@ from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
-from sectors import sic_to_sector
+from sectors import BY_CIK, SECTOR_SCHEME, SECTORS, sic_to_sector
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -256,13 +256,32 @@ def fetch_issuers(ciks: list[str], prev: dict[str, dict], identity: str, full: b
 def apply_sectors(securities: dict[str, dict], issuers: dict[str, dict]) -> None:
     for row in securities.values():
         sic = issuers.get(row["cik"], {}).get("sic")
-        row["sector"] = sic_to_sector(int(sic)) if sic and row["security_type"] not in FUND_TYPES else ""
+        row["sector"] = ""
+        if sic and row["security_type"] not in FUND_TYPES:
+            code = int(sic)
+            override = BY_CIK.get(row["cik"])
+            row["sector"] = override[1] if override and override[0] == code else sic_to_sector(code)
+
+
+def check_sector_overrides(issuers: dict[str, dict]) -> list[str]:
+    """A missing issuer or changed SIC needs review before an exception can be published."""
+    problems = []
+    for cik, (sic, sector) in BY_CIK.items():
+        if not re.fullmatch(r"[0-9]{10}", cik):
+            problems.append(f"sector override CIK must have 10 decimal digits: {cik}")
+        if sector not in SECTORS:
+            problems.append(f"unknown sector in override for {cik}: {sector}")
+        if cik not in issuers:
+            problems.append(f"sector override issuer is missing: {cik}")
+        elif str(issuers[cik].get("sic", "")).zfill(4) != str(sic).zfill(4):
+            problems.append(f"sector override SIC changed for {cik}: expected {sic}, got {issuers[cik].get('sic')!r}")
+    return problems
 
 
 def check(securities: dict[str, dict], issuers: dict[str, dict], prev_active: int) -> list[str]:
     """Reasons not to publish this build. Empty means publish."""
     active = [r for r in securities.values() if r["status"] == "active"]
-    problems = []
+    problems = check_sector_overrides(issuers)
     if len(active) < 0.95 * prev_active:
         problems.append(f"active rows fell from {prev_active} to {len(active)}, more than 5%")
     dupes = [t for t, n in Counter(r["ticker"] for r in active).items() if n > 1]
@@ -334,7 +353,7 @@ def main() -> None:
     active = [r for r in securities.values() if r["status"] == "active"]
     meta = {
         "built": today,
-        "sector_scheme": "sic11-v1",
+        "sector_scheme": SECTOR_SCHEME,
         "sec_last_modified": {"exchange": exchange_modified, "mf": funds_modified},
         "counts": {
             "active": len(active),
