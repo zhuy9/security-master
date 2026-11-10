@@ -76,7 +76,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000018230,CATERPILLAR INC,operating,3531,Construction Machinery & Equip,DE,1231,United States
 0000018255,CATO CORP,operating,5621,Retail-Women's Clothing Stores,DE,0130,United States
 0000018498,GENESCO INC,operating,5661,Retail-Shoe Stores,TN,0130,United States
-0000018748,CENTRAL SECURITIES CORP,other,0000,,DE,1231,United States
+0000018748,CENTRAL SECURITIES CORP,other,,,DE,1231,United States
 0000018926,"Lumen Technologies, Inc.",operating,4813,Telephone Communications (No Radiotelephone),LA,1231,United States
 0000019584,CHEMED CORP,operating,8082,Services-Home Health Care Services,DE,1231,United States
 0000019617,JPMORGAN CHASE & CO,operating,6021,National Commercial Banks,DE,1231,United States
@@ -360,7 +360,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000095029,STURM RUGER & CO INC,operating,3480,"Ordnance & Accessories, (No Vehicles/Guided Missiles)",DE,1231,United States
 0000095574,"SUPERIOR GROUP OF COMPANIES, INC.",operating,2300,Apparel & Other Finishd Prods of  Fabrics & Similar Matl,FL,1231,United States
 0000095953,ASCENT INDUSTRIES CO.,operating,2800,Chemicals & Allied Products,DE,1231,United States
-0000096021,SYSCO CORP,operating,5140,Wholesale-Groceries & Related Products,DE,0627,United States
+0000096021,SYSCO CORP,operating,5140,Wholesale-Groceries & Related Products,DE,0703,United States
 0000096223,Jefferies Financial Group Inc.,operating,6211,"Security Brokers, Dealers & Flotation Companies",NY,1130,United States
 0000096536,"TAYLOR DEVICES, INC.",operating,3569,"General Industrial Machinery & Equipment, NEC",NY,0531,United States
 0000096869,TEJON RANCH CO,operating,6500,Real Estate,DE,1231,United States
@@ -451,7 +451,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000277135,"W.W. GRAINGER, INC.",operating,5000,Wholesale-Durable Goods,IL,1231,United States
 0000277509,FEDERAL SIGNAL CORP /DE/,operating,3711,Motor Vehicles & Passenger Car Bodies,DE,1231,United States
 0000277948,CSX CORP,operating,4011,"Railroads, Line-Haul Operating",VA,1231,United States
-0000278166,"CAVCO INDUSTRIES, INC.",operating,2451,Mobile Homes,DE,0328,United States
+0000278166,"CAVCO INDUSTRIES, INC.",operating,2451,Mobile Homes,DE,0403,United States
 0000310142,SENSIENT TECHNOLOGIES CORP,operating,2860,Industrial Organic Chemicals,WI,1231,United States
 0000310158,"Merck & Co., Inc.",operating,2834,Pharmaceutical Preparations,NJ,1231,United States
 0000310354,STANDEX INTERNATIONAL CORP/DE/,operating,3580,Refrigeration & Service Industry Machinery,DE,0630,United States
@@ -575,7 +575,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000717806,"FIRST US BANCSHARES, INC.",operating,6022,State Commercial Banks,DE,1231,United States
 0000717826,ERICSSON LM TELEPHONE CO,other,3663,Radio & Tv Broadcasting & Communications Equipment,Sweden,1231,Sweden
 0000717954,UNIFIRST CORP,operating,7200,Services-Personal Services,MA,0829,United States
-0000718332,"RAVE RESTAURANT GROUP, INC.",operating,5140,Wholesale-Groceries & Related Products,MO,0628,United States
+0000718332,"RAVE RESTAURANT GROUP, INC.",operating,5140,Wholesale-Groceries & Related Products,MO,0627,United States
 0000718413,COMMUNITY BANCORP /VT,operating,6021,National Commercial Banks,VT,1231,United States
 0000718937,STAAR SURGICAL CO,operating,3851,Ophthalmic Goods,DE,0102,United States
 0000718940,BCE INC,other,4813,Telephone Communications (No Radiotelephone),,1231,Canada
@@ -669,7 +669,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000754811,U S GLOBAL INVESTORS INC,operating,6282,Investment Advice,TX,0630,United States
 0000755001,UNITIL CORP,operating,4931,Electric & Other Services Combined,NH,1231,United States
 0000756894,BARRICK MINING CORP,other,1040,Gold and Silver Ores,"British Columbia, Canada",1231,Canada
-0000759828,JOHN HANCOCK INVESTORS TRUST,other,0000,,DE,1231,United States
+0000759828,JOHN HANCOCK INVESTORS TRUST,other,,,DE,1231,United States
 0000759866,JOHN HANCOCK INCOME SECURITIES TRUST,other,0000,,MA,1031,United States
 0000759944,CITIZENS FINANCIAL GROUP INC/RI,operating,6022,State Commercial Banks,DE,1231,United States
 0000760498,BANCFIRST CORP /OK/,operating,6021,National Commercial Banks,OK,1231,United States
@@ -836,8 +836,8 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000818033,"HERON THERAPEUTICS, INC. /DE/",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0000818479,DENTSPLY SIRONA Inc.,operating,3843,Dental Equipment & Supplies,DE,1231,United States
 0000818686,TEVA PHARMACEUTICAL INDUSTRIES LTD,operating,2834,Pharmaceutical Preparations,Israel,1231,Israel
-0000818850,NUVEEN NEW YORK MUNICIPAL VALUE FUND,other,,,MA,0228,United States
-0000818851,NUVEEN CALIFORNIA MUNICIPAL VALUE FUND,other,,,MA,0228,United States
+0000818850,NUVEEN NEW YORK MUNICIPAL INCOME FUND,other,,,MA,0228,United States
+0000818851,NUVEEN CALIFORNIA MUNICIPAL INCOME FUND,other,,,MA,0228,United States
 0000818972,"BNY MELLON STRATEGIC MUNICIPALS, INC.",other,0000,,MD,0930,United States
 0000819793,ALBANY INTERNATIONAL CORP /DE/,operating,2221,"Broadwoven Fabric Mills, Man Made Fiber & Silk",DE,1231,United States
 0000820027,AMERIPRISE FINANCIAL INC,operating,6282,Investment Advice,DE,1231,United States
@@ -888,7 +888,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000833079,Meritage Homes CORP,operating,1531,Operative Builders,MD,1231,United States
 0000833444,Johnson Controls International plc,operating,3585,Air-Cond & Warm Air Heatg Equip & Comm & Indl Refrig Equip,Ireland,0930,Ireland
 0000833640,POWER INTEGRATIONS INC,operating,3674,Semiconductors & Related Devices,CA,1231,United States
-0000835011,MGP INGREDIENTS INC,operating,5180,"Wholesale-Beer, Wine & Distilled Alcoholic Beverages",KS,1231,United States
+0000835011,"SEMPREON, INC",operating,5180,"Wholesale-Beer, Wine & Distilled Alcoholic Beverages",KS,1231,United States
 0000835324,"Stock Yards Bancorp, Inc.",operating,6022,State Commercial Banks,KY,1231,United States
 0000835333,Invesco Municipal Income Opportunities Trust,other,,,MA,0530,United States
 0000835403,DIAGEO PLC,other,2080,Beverages,United Kingdom,0630,United Kingdom
@@ -915,7 +915,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000844059,"FRP HOLDINGS, INC.",operating,6500,Real Estate,FL,1231,United States
 0000844150,NatWest Group plc,other,6029,"Commercial Banks, NEC",United Kingdom,1231,United Kingdom
 0000844551,WOODSIDE ENERGY GROUP LTD,other,1311,Crude Petroleum & Natural Gas,,1231,Australia
-0000844790,FRANKLIN MANAGED MUNICIPAL INCOME TRUST,other,,,MA,1031,United States
+0000844790,FRANKLIN MANAGED MUNICIPAL INCOME TRUST,other,0000,,MA,1031,United States
 0000844965,TETRA TECHNOLOGIES INC,operating,1311,Crude Petroleum & Natural Gas,DE,1231,United States
 0000845611,GABELLI CONVERTIBLE & INCOME SECURITIES FUND INC,operating,,,MD,0930,United States
 0000845877,FEDERAL AGRICULTURAL MORTGAGE CORP,operating,6111,Federal & Federally-Sponsored Credit Agencies,,1231,United States
@@ -942,7 +942,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000855658,LATTICE SEMICONDUCTOR CORP,operating,3674,Semiconductors & Related Devices,DE,0102,United States
 0000855683,MILESTONE SCIENTIFIC INC.,operating,3842,"Orthopedic, Prosthetic & Surgical Appliances & Supplies",DE,1231,United States
 0000855886,JOHN HANCOCK PREMIUM DIVIDEND FUND,other,0000,,MA,1031,United States
-0000855887,"BNY MELLON STRATEGIC MUNICIPAL BOND FUND, INC.",other,,,MD,1130,United States
+0000855887,"BNY MELLON STRATEGIC MUNICIPAL BOND FUND, INC.",other,0000,,MD,1130,United States
 0000856982,MERIT MEDICAL SYSTEMS INC,operating,3841,Surgical & Medical Instruments & Apparatus,UT,1231,United States
 0000857005,PTC INC.,operating,7372,Services-Prepackaged Software,MA,0930,United States
 0000857489,VANGUARD INTERNATIONAL EQUITY INDEX FUNDS,investment,,,DE,1031,United States
@@ -1171,7 +1171,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000899751,TITAN INTERNATIONAL INC,operating,3312,"Steel Works, Blast Furnaces & Rolling Mills (Coke Ovens)",IL,1231,United States
 0000899923,MYRIAD GENETICS INC,operating,2835,In Vitro & In Vivo Diagnostic Substances,DE,1231,United States
 0000900075,COPART INC,operating,5500,Retail-Auto Dealers & Gasoline Stations,DE,0731,United States
-0000900422,FRANKLIN MUNICIPAL OPPORTUNITIES TRUST,other,,,MA,0430,United States
+0000900422,FRANKLIN MUNICIPAL OPPORTUNITIES TRUST,other,0000,,MA,0430,United States
 0000901243,"BLACKROCK MUNIASSETS FUND, INC.",other,,,MD,1231,United States
 0000901491,PAPA JOHNS INTERNATIONAL INC,operating,5812,Retail-Eating  Places,DE,1227,United States
 0000901832,ASTRAZENECA PLC,other,2834,Pharmaceutical Preparations,United Kingdom,1231,United Kingdom
@@ -1700,7 +1700,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001070412,CNX Resources Corp,operating,1311,Crude Petroleum & Natural Gas,DE,1231,United States
 0001070423,PLAINS ALL AMERICAN PIPELINE LP,operating,4610,Pipe Lines (No Natural Gas),DE,1231,United States
 0001070494,ACADIA PHARMACEUTICALS INC,operating,2834,Pharmaceutical Preparations,DE,1231,United States
-0001070524,GREENE COUNTY BANCORP INC,operating,6036,"Savings Institutions, Not Federally Chartered",DE,0630,United States
+0001070524,"GREENE BANCORP, INC.",operating,6036,"Savings Institutions, Not Federally Chartered",DE,0630,United States
 0001070680,CF BANKSHARES INC.,operating,6021,National Commercial Banks,DE,1231,United States
 0001070732,Eaton Vance Senior Income Trust,other,,,,,United States
 0001070750,"HOST HOTELS & RESORTS, INC.",operating,6798,Real Estate Investment Trusts,MD,1231,United States
@@ -1748,7 +1748,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001084201,SINOVAC BIOTECH LTD,other,2834,Pharmaceutical Preparations,Antigua and Barbuda,1231,China
 0001084554,LIGHTBRIDGE Corp,operating,2810,Industrial Inorganic Chemicals,NV,1231,United States
 0001084765,"RESOURCES CONNECTION, INC.",operating,7389,"Services-Business Services, NEC",DE,0531,United States
-0001084869,1 800 FLOWERS COM INC,operating,5990,"Retail-Retail Stores, NEC",DE,0628,United States
+0001084869,1 800 FLOWERS COM INC,operating,5990,"Retail-Retail Stores, NEC",DE,0627,United States
 0001084961,ENCORE CAPITAL GROUP INC,operating,6153,Short-Term Business Credit Institutions,DE,1231,United States
 0001084991,NATURAL GAS SERVICES GROUP INC,operating,1389,"Oil & Gas Field Services, NEC",,1231,United States
 0001085243,"VirTra, Inc",operating,3990,Miscellaneous Manufacturing Industries,NV,1231,United States
@@ -2381,7 +2381,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001342338,"Himax Technologies, Inc.",other,3674,Semiconductors & Related Devices,Cayman Islands,1231,China
 0001342423,Limoneira CO,operating,0100,Agricultural Production-Crops,DE,1031,United States
 0001342874,Ternium S.A.,other,3312,"Steel Works, Blast Furnaces & Rolling Mills (Coke Ovens)",Luxembourg,1231,Luxembourg
-0001342958,"KUSTOM ENTERTAINMENT, INC.",operating,3663,Radio & Tv Broadcasting & Communications Equipment,NV,1231,United States
+0001342958,"KUSTOM ENTERTAINMENT, INC.",operating,7990,Services-Miscellaneous Amusement & Recreation,NV,1231,United States
 0001343793,BlackRock Long-Term Municipal Advantage Trust,other,,,,,United States
 0001345016,YELP INC,operating,7200,Services-Personal Services,DE,1231,United States
 0001345099,MESOBLAST LTD,other,2836,"Biological Products, (No Diagnostic Substances)",Australia,0630,Australia
@@ -3025,7 +3025,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001512762,"Coherus Oncology, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001512920,SPROTT INC.,other,6199,Finance Services,"Ontario, Canada",,Canada
 0001513363,FIDUS INVESTMENT Corp,operating,,,MD,1231,United States
-0001513525,"ADIAL PHARMACEUTICALS, INC.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
+0001513525,"Azora Therapeutics, Inc. (DE)",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001513761,Norwegian Cruise Line Holdings Ltd.,operating,4400,Water Transportation,Bermuda,1231,United States
 0001513845,Nebius Group N.V.,other,7370,"Services-Computer Programming, Data Processing, Etc.",Netherlands,,Netherlands
 0001514183,"Silo Pharma, Inc.",operating,2834,Pharmaceutical Preparations,NV,1231,United States
@@ -3538,7 +3538,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001617867,"Autonomix Medical, Inc.",operating,3841,Surgical & Medical Instruments & Apparatus,DE,0331,United States
 0001618181,World Gold Trust,operating,6221,Commodity Contracts Brokers & Dealers,DE,0930,United States
 0001618627,RBB Fund Trust,investment,,,DE,0831,United States
-0001618673,Performance Food Group Co,operating,5141,"Wholesale-Groceries, General Line",DE,0627,United States
+0001618673,Performance Food Group Co,operating,5141,"Wholesale-Groceries, General Line",DE,0703,United States
 0001618732,"Nutanix, Inc.",operating,7372,Services-Prepackaged Software,DE,0731,United States
 0001618756,Restaurant Brands International Inc.,operating,5812,Retail-Eating  Places,"Ontario, Canada",1231,United States
 0001619544,9F Inc.,other,6199,Finance Services,Cayman Islands,1231,China
@@ -3547,7 +3547,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001620393,"NexPoint Residential Trust, Inc.",operating,6798,Real Estate Investment Trusts,MD,1231,United States
 0001620459,"James River Group Holdings, Inc.",operating,6331,"Fire, Marine & Casualty Insurance",DE,1231,United States
 0001620463,"LeonaBio, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",,1231,United States
-0001620533,Shake Shack Inc.,operating,5810,Retail-Eating & Drinking Places,,1231,United States
+0001620533,Shake Shack Inc.,operating,5810,Retail-Eating & Drinking Places,,1230,United States
 0001620737,ORGANIGRAM GLOBAL INC.,other,2834,Pharmaceutical Preparations,Canada (Federal Level),0930,Canada
 0001621221,"ARTELO BIOSCIENCES, INC.",operating,2834,Pharmaceutical Preparations,NV,1231,United States
 0001621434,"Black Stone Minerals, L.P.",operating,1311,Crude Petroleum & Natural Gas,DE,1231,United States
@@ -3566,7 +3566,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001624794,"CSW INDUSTRIALS, INC.",operating,2891,Adhesives & Sealants,DE,0331,United States
 0001625101,"PULSE BIOSCIENCES, INC.",operating,3841,Surgical & Medical Instruments & Apparatus,DE,1231,United States
 0001625278,"NERDWALLET, INC.",operating,7374,Services-Computer Processing & Data Preparation,DE,1231,United States
-0001625297,"Indivior Pharmaceuticals, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
+0001625297,"Supernus, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001625414,Baozun Inc.,other,5961,Retail-Catalog & Mail-Order Houses,Cayman Islands,1231,China
 0001625641,"CS Disco, Inc.",operating,7372,Services-Prepackaged Software,DE,1231,United States
 0001625791,Kornit Digital Ltd.,other,3555,Printing Trades Machinery & Equipment,Israel,1231,Israel
@@ -3707,7 +3707,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001653909,"Smartbird, Inc.",operating,7374,Services-Computer Processing & Data Preparation,,1231,United States
 0001654126,ZIM Integrated Shipping Services Ltd.,other,4412,Deep Sea Foreign Transportation of  Freight,Israel,1231,Israel
 0001654595,"Medalist Diversified, Inc.",operating,6798,Real Estate Investment Trusts,MD,1231,United States
-0001654795,Brookfield Business Partners L.P.,other,1700,Construction - Special Trade Contractors,Bermuda,1231,Bermuda
+0001654795,Brookfield Business Corp,other,1700,Construction - Special Trade Contractors,"British Columbia, Canada",1231,United States
 0001655050,"Bain Capital Specialty Finance, Inc.",operating,,,DE,1231,United States
 0001655099,Brookfield Real Assets Income Fund Inc.,other,,,,1231,United States
 0001655210,"BEYOND MEAT, INC.",operating,2000,Food and Kindred Products,DE,1231,United States
@@ -3820,7 +3820,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001680873,HF Foods Group Inc.,operating,5140,Wholesale-Groceries & Related Products,DE,1231,United States
 0001681087,"Tectonic Therapeutic, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",NY,1231,United States
 0001681206,"NI Holdings, Inc.",operating,6331,"Fire, Marine & Casualty Insurance",,1231,United States
-0001681348,VivoPower PLC,other,4931,Electric & Other Services Combined,United Kingdom,0630,United Kingdom
+0001681348,VivoPower PLC,other,7374,Services-Computer Processing & Data Preparation,United Kingdom,0630,United Kingdom
 0001681459,TechnipFMC plc,operating,3533,Oil & Gas Field Machinery & Equipment,United Kingdom,1231,United Kingdom
 0001681622,Varex Imaging Corp,operating,3679,"Electronic Components, NEC",DE,1002,United States
 0001681682,ENDRA Life Sciences Inc.,operating,3845,Electromedical & Electrotherapeutic Apparatus,DE,1231,United States
@@ -3983,7 +3983,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001713863,"Rafael Holdings, Inc.",operating,2834,Pharmaceutical Preparations,DE,0731,United States
 0001713930,Nexa Resources S.A.,other,1000,Metal Mining,Luxembourg,1231,Luxembourg
 0001714174,Burford Capital Ltd,operating,6199,Finance Services,Guernsey,1231,Guernsey
-0001714562,"GameSquare Holdings, Inc.",operating,7900,Services-Amusement & Recreation Services,"Ontario, Canada",1231,United States
+0001714562,"GameSquare Holdings, Inc.",operating,7900,Services-Amusement & Recreation Services,DE,1231,United States
 0001714899,Denali Therapeutics Inc.,operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001715497,Borr Drilling Ltd,other,1381,Drilling Oil & Gas Wells,Bermuda,1231,Bermuda
 0001715925,MindWalk Holdings Corp.,other,2834,Pharmaceutical Preparations,"British Columbia, Canada",0430,Canada
@@ -4484,7 +4484,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001807389,"Pop Culture Group Co., Ltd",other,7900,Services-Amusement & Recreation Services,Cayman Islands,0630,China
 0001807486,Alger ETF Trust,investment,,,MA,1231,United States
 0001807794,Credo Technology Group Holding Ltd,operating,3674,Semiconductors & Related Devices,Cayman Islands,0429,Cayman Islands
-0001807887,Laser Photonics Corp,operating,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",WY,1231,United States
+0001807887,LASE Corp.,operating,3690,"Miscellaneous Electrical Machinery, Equipment & Supplies",WY,1231,United States
 0001808110,DDC Enterprise Ltd,other,2000,Food and Kindred Products,Cayman Islands,1231,United States
 0001808377,Innovative Eyewear Inc,operating,3851,Ophthalmic Goods,FL,1231,United States
 0001808805,"Nautilus Biotechnology, Inc.",operating,3826,Laboratory Analytical Instruments,,1231,United States
@@ -4534,6 +4534,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001815776,"LENZ Therapeutics, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001815779,Hafnia Ltd,other,4700,Transportation Services,Bermuda,1231,Singapore
 0001815846,MINISO Group Holding Ltd,other,5331,Retail-Variety Stores,Cayman Islands,1231,China
+0001815974,"Anebulo Pharmaceuticals, Inc.",operating,2834,Pharmaceutical Preparations,DE,0630,United States
 0001816007,Lufax Holding Ltd,other,6199,Finance Services,Cayman Islands,1231,China
 0001816017,"Spire Global, Inc.",operating,4899,"Communications Services, NEC",DE,1231,United States
 0001816125,Dimensional ETF Trust,investment,,,DE,1031,United States
@@ -4600,16 +4601,16 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001821769,Navitas Semiconductor Corp,operating,3674,Semiconductors & Related Devices,DE,1231,United States
 0001821825,Organon & Co.,operating,2834,Pharmaceutical Preparations,,1231,United States
 0001821866,BTQ Technologies Corp.,other,7370,"Services-Computer Programming, Data Processing, Etc.","British Columbia, Canada",1231,Canada
-0001822359,DocGo Inc.,operating,8000,Services-Health Services,DE,1231,United States
+0001822359,DocGo Inc.,operating,4700,Transportation Services,DE,1231,United States
 0001822462,Foghorn Therapeutics Inc.,operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001822479,Sotera Health Co,operating,8090,"Services-Misc Health & Allied Services, NEC",DE,1231,United States
 0001822492,Hillman Solutions Corp.,operating,3420,"Cutlery, Handtools & General Hardware",DE,1226,United States
-0001822523,Advanced Flower Capital Inc.,operating,0000,,MD,1231,United States
+0001822523,Advanced Flower Capital Inc.,operating,,,MD,1231,United States
 0001822791,Clene Inc.,operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001822928,Holley Inc.,operating,3714,Motor Vehicle Parts & Accessories,DE,1231,United States
 0001822966,NUSCALE POWER Corp,operating,3443,Fabricated Plate Work (Boiler Shops),,1231,United States
 0001822993,Jackson Financial Inc.,operating,6311,Life Insurance,DE,1231,United States
-0001823144,"GPGI, Inc.",operating,6199,Finance Services,DE,1231,United States
+0001823144,"GPGI, Inc.",operating,6199,Finance Services,NV,1231,United States
 0001823239,"MARAVAI LIFESCIENCES HOLDINGS, INC.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001823255,MAYFAIR GOLD CORP.,other,1000,Metal Mining,"British Columbia, Canada",1231,Canada
 0001823306,Lightspeed Commerce Inc.,other,7372,Services-Prepackaged Software,Canada (Federal Level),0331,Canada (Federal Level)
@@ -4912,7 +4913,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001856437,Victoria's Secret & Co.,operating,5621,Retail-Women's Clothing Stores,,0130,United States
 0001856485,Sylvamo Corp,operating,2621,Paper Mills,DE,1231,United States
 0001856525,"Core & Main, Inc.",operating,5099,"Wholesale-Durable Goods, NEC",DE,0131,United States
-0001856725,"Rani Therapeutics Holdings, Inc.",operating,2834,Pharmaceutical Preparations,CA,1231,United States
+0001856725,"Rani Therapeutics Holdings, Inc.",operating,2834,Pharmaceutical Preparations,,1231,United States
 0001857030,Intercure Ltd.,other,2834,Pharmaceutical Preparations,Israel,1231,Israel
 0001857044,"Indaptus Therapeutics, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001857047,MDA Space Ltd.,other,3760,Guided Missiles & Space Vehicles & Parts,"Ontario, Canada",1231,Canada
@@ -5067,7 +5068,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001879403,Stratum Holdings Corp.,operating,6531,Real Estate Agents & Managers (For Others),NV,1231,United States
 0001879726,Sidus Space Inc.,operating,4812,Radiotelephone Communications,DE,1231,United States
 0001879754,EShallGo Inc.,other,7359,"Services-Equipment Rental & Leasing, NEC",Cayman Islands,0331,China
-0001880319,"Perimeter Solutions, Inc.",operating,2800,Chemicals & Allied Products,,1231,United States
+0001880319,Perimeter Group Inc.,operating,2800,Chemicals & Allied Products,,1231,United States
 0001880438,"AN2 Therapeutics, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0001880661,TPG Inc.,operating,6282,Investment Advice,DE,1231,United States
 0001881472,Magic Empire Global Ltd,other,6199,Finance Services,"Virgin Islands, British",1231,Hong Kong
@@ -5480,7 +5481,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001990354,Waystar Holding Corp.,operating,7373,Services-Computer Integrated Systems Design,DE,1231,United States
 0001991261,Rantizo,other,1623,"Water, Sewer, Pipeline, Comm & Power Line Construction",Cayman Islands,1231,Singapore
 0001991332,MKDWELL Tech Inc.,other,3600,Electronic & Other Electrical Equipment (No Computer Equip),"Virgin Islands, British",1231,Taiwan
-0001991592,INLIF Ltd,other,3569,"General Industrial Machinery & Equipment, NEC",Cayman Islands,1231,China
+0001991592,INLIF Ltd,other,3569,"General Industrial Machinery & Equipment, NEC","Virgin Islands, British",1231,China
 0001991605,Yimutian Inc.,other,7374,Services-Computer Processing & Data Preparation,Cayman Islands,1231,China
 0001991792,"CG Oncology, Inc.",operating,2836,"Biological Products, (No Diagnostic Substances)",DE,1231,United States
 0001992104,PGIM Rock ETF Trust,investment,,,DE,1031,United States
@@ -5839,7 +5840,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002052547,EGH Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002052568,Legence Corp.,operating,1700,Construction - Special Trade Contractors,DE,1231,United States
 0002052959,Lionsgate Studios Corp.,operating,7812,Services-Motion Picture & Video Tape Production,,0331,Canada
-0002053456,Generation Essentials Group,other,2721,Periodicals: Publishing or  Publishing & Printing,Cayman Islands,1231,Cayman Islands
+0002053456,Generation Essentials Group,other,7011,Hotels & Motels,Cayman Islands,1231,Cayman Islands
 0002053641,Elite Express Holding Inc.,operating,4210,Trucking & Courier Services (No Air),DE,1130,United States
 0002053799,Kochav Defense Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002053927,Wintergreen Acquisition Corp.,operating,7370,"Services-Computer Programming, Data Processing, Etc.",Cayman Islands,1231,China
@@ -5885,6 +5886,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002062440,Kyivstar Group Ltd.,other,4812,Radiotelephone Communications,Bermuda,1231,United Arab Emirates
 0002062583,"MiniMed Group, Inc.",operating,3841,Surgical & Medical Instruments & Apparatus,DE,1231,United States
 0002063196,Netskope Inc,operating,7372,Services-Prepackaged Software,DE,0131,United States
+0002063345,Cadeler plc,other,4412,Deep Sea Foreign Transportation of  Freight,United Kingdom,1231,United Kingdom
 0002063380,Fidelity Solana Fund,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
 0002063816,Indigo Acquisition Corp.,operating,6770,Blank Checks,,1231,United States
 0002063863,"Elauwit Connection, Inc.",operating,4899,"Communications Services, NEC",,1231,United States
@@ -5926,7 +5928,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002070542,AIB Data Centers Inc.,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
 0002070602,Highview Merger Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002070849,"BillionToOne, Inc.",operating,8071,Services-Medical Laboratories,DE,1231,United States
-0002070887,Crown Reserve Acquisition Corp. I,operating,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
+0002070887,Crown Reserve Acquisition Corp. I,operating,5500,Retail-Auto Dealers & Gasoline Stations,Cayman Islands,1231,Cayman Islands
 0002070900,Quantumsphere Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,0331,United States
 0002070954,SMJ International Holdings Inc.,other,5030,Wholesale-Lumber & Other Construction Materials,Cayman Islands,0331,Singapore
 0002071107,Thrive Series Trust,investment,,,DE,1231,United States
@@ -5939,6 +5941,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002073340,Talon Capital Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002073515,ARC Group Acquisition I Corp.,operating,6159,Miscellaneous Business Credit Institution,DE,1231,United States
 0002073553,AI Infrastructure Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002073616,Canary Staked INJ ETF,other,6199,Finance Services,DE,1231,United States
 0002073928,M3-Brigade Acquisition VI Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002074123,CCH Holdings Ltd,other,5812,Retail-Eating  Places,Cayman Islands,1231,Malaysia
 0002074176,"Viper Energy, Inc.",operating,1311,Crude Petroleum & Natural Gas,DE,1231,United States
@@ -5947,7 +5950,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002074850,General Fusion Group Ltd.,operating,4911,Electric Services,"British Columbia, Canada",1231,Canada
 0002074872,Rice Acquisition Corp 3,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002074878,New America Acquisition I Corp.,operating,6770,Blank Checks,FL,1231,United States
-0002074973,Churchill Capital Corp XI,operating,3569,"General Industrial Machinery & Equipment, NEC",Cayman Islands,1231,United States
+0002074973,"Agility Robotics, Inc.",operating,3569,"General Industrial Machinery & Equipment, NEC",DE,1231,United States
 0002075068,Invest Green Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002075310,Trailblazer Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002075320,"Polaryx Therapeutics, Inc.",operating,2834,Pharmaceutical Preparations,WY,1231,United States
@@ -6102,7 +6105,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002093101,"Atrium Therapeutics, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0002093484,Muzero Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002093507,Greenland Energy Co,operating,1381,Drilling Oil & Gas Wells,TX,1231,United States
-0002093524,Aperture AC,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002093524,Aperture AC,operating,6199,Finance Services,Cayman Islands,1231,United States
 0002093536,"Arxis, Inc.",operating,3728,"Aircraft Parts & Auxiliary Equipment, NEC",DE,1231,United States
 0002093856,APEX CRITICAL METALS CORP.,other,1000,Metal Mining,"British Columbia, Canada",0731,Canada
 0002093912,Praetorian Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
@@ -6194,6 +6197,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002108383,Sprott Physical Copper Trust,other,6221,Commodity Contracts Brokers & Dealers,"Ontario, Canada",1231,Canada
 0002108962,General Catalyst Global Resilience Merger Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002109150,INNIO N.V.,operating,3621,Motors & Generators,Germany,1231,Germany
+0002109823,Leader's Advantage Acquisition Corp.,other,6770,Blank Checks,Cayman Islands,1231,United States
 0002109869,Exascale Labs Holdings Inc.,operating,7372,Services-Prepackaged Software,DE,0630,United States
 0002109876,Mountain Crest Acquisition 6 Corp.,operating,6770,Blank Checks,"Virgin Islands, British",1231,United States
 0002110029,"ERock, Inc.",operating,3620,Electrical Industrial Apparatus,DE,1231,United States
@@ -6254,13 +6258,13 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002131524,"Braveheart Bio, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0002131813,newcleo plc,other,3443,Fabricated Plate Work (Boiler Shops),United Kingdom,1231,United Kingdom
 0002131853,FutureCorp Space Acquisition 1,operating,6770,Blank Checks,Cayman Islands,1231,United States
-0002132582,Lyntris Inc.,other,3812,"Search, Detection, Navigation, Guidance, Aeronautical Sys",DE,1231,United States
-0002132873,MSG Rangers Corp.,other,7990,Services-Miscellaneous Amusement & Recreation,NV,0630,United States
+0002132582,Lyntris Inc.,operating,3812,"Search, Detection, Navigation, Guidance, Aeronautical Sys",DE,1231,United States
+0002132873,MSG Rangers Corp.,operating,7990,Services-Miscellaneous Amusement & Recreation,NV,0630,United States
 0002133136,Market Technology Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002133239,Southern Cross Acquisition II Corp.,other,6770,Blank Checks,Cayman Islands,1231,United States
 0002133719,NorthStrive Acquisition Corp I.,other,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002134856,Xterax Corp II,operating,6770,Blank Checks,Cayman Islands,1231,United States
-0002136387,Real REMAX Group Inc.,other,6531,Real Estate Agents & Managers (For Others),DE,1231,United States
+0002136387,Real REMAX Group Inc.,operating,6531,Real Estate Agents & Managers (For Others),DE,1231,United States
 0002136530,Meridian3 Industrials Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002137497,William Blair ETF Trust,investment,,,DE,1231,United States
 0002137679,OceanLight Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,0531,United States
@@ -6271,12 +6275,12 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002139246,Viking Acquisition Corp. II,operating,6770,Blank Checks,DE,1231,United States
 0002140030,"Thunder Bridge Capital Partners V, Ltd.",operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002141406,Accelevation Holdings Corp.,other,3620,Electrical Industrial Apparatus,DE,1231,United States
-0002141616,Amaero Inc.,other,3390,Miscellaneous Primary Metal Products,DE,1231,United States
+0002141616,Amaero Inc.,operating,3390,Miscellaneous Primary Metal Products,DE,1231,United States
 0002143673,Uranium Royalty Corp.,operating,6221,Commodity Contracts Brokers & Dealers,DE,0430,United States
 0002143850,"CITY THERAPEUTICS, INC.",other,2834,Pharmaceutical Preparations,DE,1231,United States
 0002145659,JATT III Acquisition Corp,other,6770,Blank Checks,Cayman Islands,1231,United States
 0002146310,Inflection Point Acquisition Corp. VIII,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002147219,Rainier Acquisition Corp,other,6770,Blank Checks,Cayman Islands,1231,United States
 0002149916,TCGX Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
-0002152623,"Navient Holdings, Inc.",other,6211,"Security Brokers, Dealers & Flotation Companies",DE,1231,United States
+0002152623,"Navient Holdings, Inc.",operating,6211,"Security Brokers, Dealers & Flotation Companies",DE,1231,United States
 0002153598,Frazier Life Sciences Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,United States
