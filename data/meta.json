@@ -1,20 +1,20 @@
 {
-  "built": "2026-11-12",
+  "built": "2026-11-13",
   "sector_scheme": "sic11-v2",
   "sec_last_modified": {
     "exchange": "Tue, 10 Nov 2026 20:52:19 GMT",
     "mf": "Tue, 10 Nov 2026 20:51:59 GMT"
   },
   "counts": {
-    "active": 11943,
-    "delisted": 96,
-    "active_with_cik": 10811,
+    "active": 11938,
+    "delisted": 105,
+    "active_with_cik": 10804,
     "issuers": 6288,
     "by_type": {
       "ADR": 378,
       "Closed-End Fund": 357,
-      "Common Stock": 4960,
-      "ETP": 6016,
+      "Common Stock": 4958,
+      "ETP": 6013,
       "Ltd Part": 8,
       "MLP": 27,
       "NY Reg Shrs": 5,
