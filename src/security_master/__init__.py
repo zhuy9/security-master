@@ -75,23 +75,23 @@ def _cache_file(pin: str | None) -> Path | None:
     return Path(root) / (re.sub(r"[^A-Za-z0-9._-]", "_", pin or "main") + ".json")
 
 
-def _http(url: str) -> bytes:
+def _http(url: str, tries: int = 3) -> bytes:
     """GET with three tries: one dropped connection must not fail a whole run. A 4xx is final."""
-    for attempt in range(3):
+    for attempt in range(tries):
         try:
             with urllib.request.urlopen(url, timeout=30) as resp:
                 return resp.read()
         except (OSError, http.client.HTTPException) as e:
-            if attempt == 2 or getattr(e, "code", 500) < 500:
+            if attempt == tries - 1 or getattr(e, "code", 500) < 500:
                 raise
             time.sleep(2**attempt)
     raise AssertionError("unreachable")
 
 
-def _head() -> str:
+def _head(tries: int) -> str:
     """main's current commit, from git's ref advertisement: the request `git ls-remote` makes, so
     no API key and no API rate limit."""
-    refs = _http(f"https://github.com/{REPO}.git/info/refs?service=git-upload-pack").decode()
+    refs = _http(f"https://github.com/{REPO}.git/info/refs?service=git-upload-pack", tries).decode()
     match = re.search(r"([0-9a-f]{40}) refs/heads/main\b", refs)
     if not match:
         raise OSError("could not read main's commit from GitHub")
@@ -175,7 +175,8 @@ def _refresh(old: _Snapshot | None, force: bool = False) -> _Snapshot:
     if not force and old is None and raw and time.time() - path.stat().st_mtime < _ttl():
         return _build(raw, None, path.stat().st_mtime)  # another process checked recently
     try:
-        head = _head()
+        # With a copy to serve, one try: the caller is waiting, and a failed check retries in a minute.
+        head = _head(3 if force or (old is None and raw is None) else 1)
         if raw is not None and raw["commit"] == head:
             _touch(path)  # still the latest: processes that start within the TTL skip their check
             return _build(raw, old, time.time())

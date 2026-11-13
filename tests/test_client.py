@@ -43,13 +43,14 @@ COMMITS = {
 
 class FakeGitHub:
     def __init__(self) -> None:
-        self.head, self.offline, self.calls, self.gate = V1, False, [], None
+        self.head, self.offline, self.calls, self.gate, self.head_tries = V1, False, [], None, []
 
-    def http(self, url: str) -> bytes:
+    def http(self, url: str, tries: int = 3) -> bytes:
         if self.offline:
             raise urllib.error.URLError("offline")
         if url.endswith("info/refs?service=git-upload-pack"):
             self.calls.append("head")
+            self.head_tries.append(tries)
             if self.gate:
                 self.gate.wait()
             return f"001e# service=git-upload-pack\n0000003f{self.head} refs/heads/main\n0000".encode()
@@ -77,6 +78,13 @@ def test_http_retries_a_dropped_connection_then_gives_up() -> None:
     flaky = [reset, reset, io.BytesIO(b"data")]
     with mock.patch.object(sm, "time"), mock.patch("urllib.request.urlopen", side_effect=flaky) as urlopen:  # no sleeps
         assert REAL_HTTP("https://example.org/x") == b"data" and urlopen.call_count == 3
+        urlopen.reset_mock()
+        urlopen.side_effect = reset
+        try:
+            REAL_HTTP("https://example.org/x", tries=1)
+            raise AssertionError("expected URLError after one try")
+        except urllib.error.URLError:
+            assert urlopen.call_count == 1
         urlopen.reset_mock()
         urlopen.side_effect = reset
         try:
@@ -143,6 +151,15 @@ def test_refreshes_only_after_the_ttl_and_only_downloads_a_new_commit() -> None:
     github.calls.clear()
     github.head = V1
     assert sm.refresh()["commit"] == V1 and github.calls[0] == "head"  # refresh() ignores the TTL
+
+
+def test_a_check_with_data_in_hand_tries_once_so_callers_are_not_held_up() -> None:
+    github, clock = fresh()
+    sm.security("AAPL")  # nothing cached: worth three tries
+    clock[0] += 3601
+    sm.security("AAPL")  # a copy in hand: one try, the next check is a minute away anyway
+    sm.refresh()  # asked for by name: three tries
+    assert github.head_tries == [3, 1, 3]
 
 
 def test_a_new_process_reuses_a_recently_checked_disk_cache() -> None:
