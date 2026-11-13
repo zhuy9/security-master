@@ -13,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from build import apply_sectors
-from sectors import BY_CIK, BY_GROUP, BY_INDUSTRY, BY_MAJOR
+from sectors import BY_CIK, BY_GROUP, BY_INDUSTRY, BY_MAJOR, SECTORS
 
 with (Path(__file__).parent / "fixtures" / "sector_cases.csv").open(newline="", encoding="utf-8") as f:
     CASES = list(csv.DictReader(f))
@@ -43,6 +43,11 @@ def test_cases_cover_policy_and_mapping_layers() -> None:
         "Technology", "Communication", "Financials", "Health Care", "Industrials", "Materials",
         "Energy & Mining", "Utilities", "Consumer Staples", "Consumer Discretionary", "Real Estate", "",
     }
+
+
+def test_every_table_names_a_known_sector() -> None:
+    named = {*BY_INDUSTRY.values(), *BY_GROUP.values(), *BY_MAJOR.values(), *(sector for _, sector in BY_CIK.values())}
+    assert named <= SECTORS, named - SECTORS  # a typo here would publish a twelfth sector
 
 
 def test_unlisted_ciks_keep_sic_defaults_and_unknown_sic_is_other() -> None:
