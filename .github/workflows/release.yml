@@ -1,6 +1,9 @@
 name: release
 
 on:
+  push: # lint, test and build every code change; only a published release uploads
+    branches: [main]
+    paths-ignore: ["data/**"]
   release:
     types: [published]
   workflow_dispatch:

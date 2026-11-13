@@ -43,7 +43,8 @@ python tests/test_package.py
 - `.github/workflows/refresh.yml` refreshes data every weekday and commits changes to `data/`.
 - To rebuild locally, copy `.env.example` to `.env`, set `EDGAR_IDENTITY`, and run `python src/build.py`.
   `OPENFIGI_API_KEY` is optional. `--full` refetches all issuers. This makes live API calls and writes data.
-- `.github/workflows/release.yml` tests and builds with Python 3.12. A manual run checks the package only.
+- `.github/workflows/release.yml` tests and builds with Python 3.12. A push to `main` that changes more than
+  `data/`, or a manual run, checks the package only.
   Publishing a GitHub release uploads it to PyPI through the `pypi` environment and Trusted Publishing.
 - The release tag must be `v` plus the version in `pyproject.toml`. Follow the release steps in the README.
 - Package versions control client code. Data updates do not need package releases.
