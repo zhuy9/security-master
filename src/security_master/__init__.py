@@ -36,6 +36,7 @@ import os
 import re
 import threading
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -75,13 +76,13 @@ def _cache_file(pin: str | None) -> Path | None:
 
 
 def _http(url: str) -> bytes:
-    """GET with three tries: one dropped connection must not fail a whole run."""
+    """GET with three tries: one dropped connection must not fail a whole run. A 4xx is final."""
     for attempt in range(3):
         try:
             with urllib.request.urlopen(url, timeout=30) as resp:
                 return resp.read()
-        except (OSError, http.client.HTTPException):
-            if attempt == 2:
+        except (OSError, http.client.HTTPException) as e:
+            if attempt == 2 or getattr(e, "code", 500) < 500:
                 raise
             time.sleep(2**attempt)
     raise AssertionError("unreachable")
@@ -163,7 +164,10 @@ def _refresh(old: _Snapshot | None, force: bool = False) -> _Snapshot:
     raw = _read(path)
     if pin:
         if raw is None:
-            raw = _download(pin)
+            try:
+                raw = _download(pin)
+            except urllib.error.HTTPError as e:
+                raise RuntimeError(f"security-master: could not load SECURITY_MASTER_REF={pin!r} from GitHub: {e}") from e
             snap = _build(raw, old, math.inf)
             _save(path, raw)
             return snap

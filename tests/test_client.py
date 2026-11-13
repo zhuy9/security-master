@@ -54,6 +54,8 @@ class FakeGitHub:
                 self.gate.wait()
             return f"001e# service=git-upload-pack\n0000003f{self.head} refs/heads/main\n0000".encode()
         commit, name = url.split("/security-master/")[1].split("/data/")
+        if commit not in COMMITS:
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
         self.calls.append(f"get {name}@{commit[:1]}")
         return COMMITS[commit][name].encode()
 
@@ -82,6 +84,22 @@ def test_http_retries_a_dropped_connection_then_gives_up() -> None:
             raise AssertionError("expected URLError after three tries")
         except urllib.error.URLError:
             assert urlopen.call_count == 3
+        urlopen.reset_mock()
+        urlopen.side_effect = urllib.error.HTTPError("https://example.org/x", 404, "Not Found", {}, None)
+        try:
+            REAL_HTTP("https://example.org/x")
+            raise AssertionError("expected HTTPError")
+        except urllib.error.HTTPError:
+            assert urlopen.call_count == 1  # a 404 will not get better: no retry
+
+
+def test_a_bad_pin_fails_with_an_error_that_names_it() -> None:
+    fresh(pin="no-such-tag")
+    try:
+        sm.security("AAPL")
+        raise AssertionError("expected RuntimeError")
+    except RuntimeError as e:
+        assert "SECURITY_MASTER_REF" in str(e) and "no-such-tag" in str(e), e
 
 
 def test_lookups() -> None:
