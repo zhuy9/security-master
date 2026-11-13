@@ -14,6 +14,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 import security_master as sm
+from build import ISSUER_COLS, SECURITY_COLS
 
 REAL_HTTP = sm._http  # captured before fresh() swaps in the fake GitHub
 
@@ -108,6 +109,12 @@ def test_a_bad_pin_fails_with_an_error_that_names_it() -> None:
         raise AssertionError("expected RuntimeError")
     except RuntimeError as e:
         assert "SECURITY_MASTER_REF" in str(e) and "no-such-tag" in str(e), e
+
+
+def test_the_builder_writes_the_columns_these_checks_feed_the_client() -> None:
+    # Released clients keep downloading new data, so a column change here must be a deliberate one.
+    assert HEADER == ",".join(SECURITY_COLS) + "\n"
+    assert ISSUERS.splitlines()[0] == ",".join(ISSUER_COLS)
 
 
 def test_lookups() -> None:
