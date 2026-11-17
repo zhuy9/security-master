@@ -97,8 +97,6 @@ Java 17+, no dependencies. A port of the Python client, published to Maven Centr
 </dependency>
 ```
 
-With Gradle: `implementation("io.github.zhuy9:security-master:0.1.0")`.
-
 ```java
 import io.github.zhuy9.securitymaster.SecurityMaster;
 
@@ -113,7 +111,7 @@ SecurityMaster.refresh();                 // check for a new build now; throws i
 It caches, refreshes and pins exactly like the Python client and reads the same three variables
 above. `Security` and `Issuer` are records with one `String` per column, in camel case
 (`compositeFigi()`, `sicDescription()`), and `""` means unknown. `meta()` returns `meta.json`
-unparsed, for your JSON library; there is no `frame()`. The cache file is `<ref>.java.bin`, next to
+unparsed, for your JSON library; there is no `frame()`. The cache file is `<ref>.java.xml`, next to
 the Python client's `<ref>.json`. Behind a proxy it reads `https_proxy` and `no_proxy` as Python
 does, or the JVM's `-Dhttps.proxyHost` and `-Djava.net.useSystemProxies=true`; proxy logins are not
 supported.
@@ -260,9 +258,7 @@ The package downloads its data from GitHub; the CSV files are not bundled in the
 
 ## Publish a Java release
 
-The Java client has its own version, in `java/pom.xml`, and releases from tags `java-v<version>`
-through `.github/workflows/java.yml`. Like the Python client, it needs a release only when its code
-changes. Its checks need JDK 17+, Maven and Python:
+The Java client has its own version, in `java/pom.xml`. Its checks need JDK 17+, Maven and Python:
 
 ```sh
 mvn -B -f java/pom.xml clean verify   # compiles with -Werror, runs the checks, builds the jars

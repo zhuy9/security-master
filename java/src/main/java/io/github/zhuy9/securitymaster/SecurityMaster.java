@@ -1,20 +1,15 @@
 package io.github.zhuy9.securitymaster;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.SocketAddress;
 import java.net.URI;
-import java.net.http.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
-import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.*;
 import java.util.regex.*;
@@ -59,7 +54,6 @@ public final class SecurityMaster {
     static final Pattern FIGI = Pattern.compile("BBG[0-9A-Z]{9}");
     static final Pattern HEAD = Pattern.compile("([0-9a-f]{40}) refs/heads/main\\b");
     static final Pattern HOST_PORT = Pattern.compile("(.*):([0-9]+)", Pattern.DOTALL); // urllib's _splitport
-    static final String MAGIC = "security-master-java 1";
 
     record Raw(String commit, String meta, String securities, String issuers) {}
 
@@ -90,53 +84,29 @@ public final class SecurityMaster {
     static DoubleSupplier clock = () -> System.currentTimeMillis() / 1e3;
     static UnaryOperator<String> getenv = System::getenv;
     static long backoffMillis = 1000;
-    static long idleNanos = TimeUnit.SECONDS.toNanos(30);
+    static int timeoutMillis = 30_000;
 
     static final ReentrantLock LOCK = new ReentrantLock();
     static volatile Snapshot snapshot;
 
     /** Proxies as urllib finds them: https_proxy or HTTPS_PROXY (http_ for http) unless no_proxy names the host. Else Java's
      * own: -Dhttps.proxyHost, which also wins over the variables, or -Djava.net.useSystemProxies=true for the OS settings
-     * Python reads on macOS and Windows. ponytail: no user:pass@ proxy logins; add an Authenticator if one is needed. */
-    static final ProxySelector PROXIES = new ProxySelector() {
-        @Override
-        public List<Proxy> select(URI uri) {
-            String p = proxyEnv(uri.getScheme()), host = uri.getHost().toLowerCase(Locale.ROOT);
-            if (p == null || System.getProperty(uri.getScheme() + ".proxyHost") != null) {
-                ProxySelector jvm = ProxySelector.getDefault(); // null if an app cleared it
-                return jvm == null ? List.of(Proxy.NO_PROXY) : jvm.select(uri);
-            }
-            String no = proxyEnv("no");
-            if (no != null && (no.equals("*") || Arrays.stream(no.split(",")).map(n -> strip(n).replaceFirst("^\\.+", "").toLowerCase(Locale.ROOT))
-                    .anyMatch(n -> !n.isEmpty() && (host.equals(n) || host.endsWith("." + n))))) return List.of(Proxy.NO_PROXY);
-            // Split as urllib's _parse_proxy does, not with URI, which has no host for names like corp_proxy.
-            String hostPort = p.replaceFirst("^[^/:]+://", "").replaceFirst("/.*", "");
-            hostPort = hostPort.substring(hostPort.lastIndexOf('@') + 1);
-            Matcher m = HOST_PORT.matcher(hostPort);
-            String proxyHost = m.matches() ? m.group(1) : hostPort;
-            if (proxyHost.startsWith("[") && proxyHost.endsWith("]")) proxyHost = proxyHost.substring(1, proxyHost.length() - 1); // IPv6
-            int port = m.matches() ? Integer.parseInt(m.group(2)) : uri.getScheme().equals("https") ? 443 : 80; // urllib's defaults
-            return List.of(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, port)));
-        }
-
-        @Override
-        public void connectFailed(URI uri, SocketAddress sa, IOException e) {}
-    };
-
-    static volatile HttpClient client;
-
-    /** Built on first network use, not when the class loads: a failure here (TLS setup, out of file handles) is then an
-     * IOException that the offline path handles, and lookups from the cache keep working. Two racing threads may each
-     * build one; either is fine. */
-    static HttpClient client() throws IOException {
-        HttpClient c = client;
-        if (c != null) return c;
-        try {
-            return client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL) // urllib follows redirects
-                    .connectTimeout(Duration.ofSeconds(30)).proxy(PROXIES).build();
-        } catch (RuntimeException e) {
-            throw new IOException("could not create an HTTP client", e);
-        }
+     * Python reads on macOS and Windows. null means Java's own. ponytail: no user:pass@ proxy logins; add an
+     * Authenticator if one is needed. */
+    static Proxy proxy(URI uri) {
+        String p = proxyEnv(uri.getScheme()), host = uri.getHost().toLowerCase(Locale.ROOT);
+        if (p == null || System.getProperty(uri.getScheme() + ".proxyHost") != null) return null;
+        String no = proxyEnv("no");
+        if (no != null && (no.equals("*") || Arrays.stream(no.split(",")).map(n -> strip(n).replaceFirst("^\\.+", "").toLowerCase(Locale.ROOT))
+                .anyMatch(n -> !n.isEmpty() && (host.equals(n) || host.endsWith("." + n))))) return Proxy.NO_PROXY;
+        // Split as urllib's _parse_proxy does, not with URI, which has no host for names like corp_proxy.
+        String hostPort = p.replaceFirst("^[^/:]+://", "").replaceFirst("/.*", "");
+        hostPort = hostPort.substring(hostPort.lastIndexOf('@') + 1);
+        Matcher m = HOST_PORT.matcher(hostPort);
+        String proxyHost = m.matches() ? m.group(1) : hostPort;
+        if (proxyHost.startsWith("[") && proxyHost.endsWith("]")) proxyHost = proxyHost.substring(1, proxyHost.length() - 1); // IPv6
+        int port = m.matches() ? Integer.parseInt(m.group(2)) : uri.getScheme().equals("https") ? 443 : 80; // urllib's defaults
+        return new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, port));
     }
 
     private SecurityMaster() {}
@@ -351,73 +321,27 @@ public final class SecurityMaster {
         }
     }
 
-    /** One GET, with urllib's timeout=30, which bounds each wait for data rather than the whole download: timeout() covers
-     * the wait for the headers, and the loop gives up once the body has sent nothing for idleNanos. A slow but steady
-     * download finishes; a stalled one can't hold the lock. */
+    /** One GET with urllib's timeout=30: it bounds the connect and each read, never the whole download, so a slow but
+     * steady download finishes and a stalled one gives up. Follows redirects, as urllib does. */
     static byte[] send(String url) throws IOException {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30)).build();
-        AtomicLong lastData = new AtomicLong(); // when the headers or the latest chunk arrived; 0 until the headers do
-        CompletableFuture<HttpResponse<byte[]>> pending = client().sendAsync(req, info -> progress(lastData));
-        try {
-            while (true) {
-                try {
-                    HttpResponse<byte[]> resp = pending.get(100, TimeUnit.MILLISECONDS);
-                    if (resp.statusCode() / 100 != 2) throw new HttpStatusException(url, resp.statusCode());
-                    return resp.body();
-                } catch (TimeoutException e) {
-                    long last = lastData.get();
-                    if (last != 0 && System.nanoTime() - last > idleNanos) {
-                        pending.cancel(true);
-                        throw new HttpTimeoutException("no data for " + idleNanos / 1_000_000_000 + "s from " + url);
-                    }
-                }
-            }
-        } catch (ExecutionException e) {
-            throw e.getCause() instanceof IOException io ? io : new IOException(e.getCause());
-        } catch (InterruptedException e) {
-            pending.cancel(true);
-            Thread.currentThread().interrupt();
-            throw new InterruptedIOException("interrupted waiting for " + url);
+        URI uri = URI.create(url);
+        Proxy proxy = proxy(uri);
+        HttpURLConnection c = (HttpURLConnection) (proxy == null ? uri.toURL().openConnection() : uri.toURL().openConnection(proxy));
+        c.setConnectTimeout(timeoutMillis);
+        c.setReadTimeout(timeoutMillis);
+        if (c.getResponseCode() / 100 != 2) throw new HttpStatusException(url, c.getResponseCode());
+        try (InputStream in = c.getInputStream()) {
+            byte[] body = in.readAllBytes();
+            long expected = c.getContentLengthLong(); // a connection dropped mid-body reads as an early end, not an error
+            if (expected >= 0 && body.length != expected) throw new IOException("got " + body.length + " of " + expected + " bytes from " + url);
+            return body;
         }
-    }
-
-    /** The body as bytes, noting when the headers and then each chunk arrive. */
-    static HttpResponse.BodySubscriber<byte[]> progress(AtomicLong lastData) {
-        lastData.set(System.nanoTime());
-        HttpResponse.BodySubscriber<byte[]> body = HttpResponse.BodySubscribers.ofByteArray();
-        return new HttpResponse.BodySubscriber<>() {
-            @Override
-            public CompletionStage<byte[]> getBody() {
-                return body.getBody();
-            }
-
-            @Override
-            public void onSubscribe(Flow.Subscription s) {
-                body.onSubscribe(s);
-            }
-
-            @Override
-            public void onNext(List<ByteBuffer> chunk) {
-                lastData.set(System.nanoTime());
-                body.onNext(chunk);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                body.onError(e);
-            }
-
-            @Override
-            public void onComplete() {
-                body.onComplete();
-            }
-        };
     }
 
     /** null when there is nowhere to cache, so the client runs from memory. */
     static Path cacheFile(String pin) {
         // Never <ref>.json, so the Python client can share the directory.
-        String name = (pin == null ? "main" : pin).replaceAll("[^A-Za-z0-9._-]", "_") + ".java.bin";
+        String name = (pin == null ? "main" : pin).replaceAll("[^A-Za-z0-9._-]", "_") + ".java.xml";
         String root = env("SECURITY_MASTER_CACHE"), xdg = env("XDG_CACHE_HOME"), home = env("HOME");
         if (home == null) home = System.getProperty("user.home");
         try {
@@ -439,13 +363,10 @@ public final class SecurityMaster {
             Files.createDirectories(path.getParent());
             // Python's temp name. Not createTempFile: its 0600 locks out other users sharing the directory; this gets 0666 & ~umask.
             tmp = path.resolveSibling("." + path.getFileName() + "." + ProcessHandle.current().pid() + "." + Thread.currentThread().getId() + ".tmp");
-            try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)))) {
-                out.writeUTF(MAGIC);
-                for (String s : new String[] {raw.commit, raw.meta, raw.securities, raw.issuers}) {
-                    byte[] b = s.getBytes(StandardCharsets.UTF_8);
-                    out.writeInt(b.length);
-                    out.write(b);
-                }
+            Properties p = new Properties();
+            p.putAll(Map.of("commit", raw.commit, "meta.json", raw.meta, "securities.csv", raw.securities, "issuers.csv", raw.issuers));
+            try (OutputStream out = Files.newOutputStream(tmp, StandardOpenOption.CREATE_NEW)) {
+                p.storeToXML(out, null);
             }
             Files.move(tmp, path, StandardCopyOption.ATOMIC_MOVE);
             touch(path);
@@ -458,23 +379,18 @@ public final class SecurityMaster {
         }
     }
 
+    /** The cache as XML, which, like the Python client's JSON, fails to parse when cut short.
+     * ponytail: XML 1.0 can't hold control characters; data/ has none, and a file that won't parse is just downloaded again. */
     static Raw read(Path path) {
         if (path == null) return null;
-        try (DataInputStream in = new DataInputStream(new BufferedInputStream(Files.newInputStream(path)))) {
-            if (!in.readUTF().equals(MAGIC)) return null;
-            long size = Files.size(path);
-            String[] f = new String[4];
-            for (int i = 0; i < f.length; i++) {
-                int n = in.readInt();
-                if (n < 0 || n > size) return null;
-                byte[] b = new byte[n];
-                in.readFully(b);
-                f[i] = text(b);
-            }
-            return in.read() == -1 ? new Raw(f[0], f[1], f[2], f[3]) : null;
-        } catch (IOException e) {
+        Properties p = new Properties();
+        try (InputStream in = Files.newInputStream(path)) {
+            p.loadFromXML(in);
+        } catch (IOException | IllegalArgumentException e) {
             return null;
         }
+        String c = p.getProperty("commit"), m = p.getProperty("meta.json"), s = p.getProperty("securities.csv"), i = p.getProperty("issuers.csv");
+        return c == null || m == null || s == null || i == null ? null : new Raw(c, m, s, i);
     }
 
     static double mtime(Path path) {

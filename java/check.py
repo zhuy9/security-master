@@ -17,8 +17,7 @@ sys.path.insert(0, str(ROOT / "src"))
 import security_master as sm
 from build import ISSUER_COLS, SECURITY_COLS
 
-ALLOWED = re.compile(r"module-info\.class|META-INF/(MANIFEST\.MF|LICENSE|data/|data/LICENSE|maven/.*)?|io/(github/(zhuy9/(securitymaster/([\w$]+\.class)?)?)?)?")
-JAVA_17 = 61  # class file major version: Java 17 users can load the jar
+ALLOWED = re.compile(r"META-INF/(MANIFEST\.MF|LICENSE|data/|data/LICENSE|maven/.*)?|io/(github/(zhuy9/(securitymaster/([\w$]+\.class)?)?)?)?")
 ODD = ["NOPE", "", "   ", "BBG000000000", "bbg", "-", ".", "ZZZZZZZZZZ", "brk..b", "AAPL\u2003", "\u00a0AAPL\x1f"]
 ODD_CIKS = ["0", "", "abc", "-5", " 42 ", "99999999999"]
 ODD_INTS = [0, 42, -5, 99999999999]
@@ -33,8 +32,6 @@ def check_jar() -> None:
         assert all(ALLOWED.fullmatch(name) for name in names), [name for name in names if not ALLOWED.fullmatch(name)]
         for name, source in (("META-INF/LICENSE", "LICENSE"), ("META-INF/data/LICENSE", "data/LICENSE")):
             assert jar.read(name) == (ROOT / source).read_bytes(), name
-        for name in ("io/github/zhuy9/securitymaster/SecurityMaster.class", "module-info.class"):
-            assert int.from_bytes(jar.read(name)[6:8], "big") == JAVA_17, name
 
 
 def esc(value: str) -> str:

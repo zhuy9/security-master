@@ -18,8 +18,9 @@ final class ParityDump {
 
     public static void main(String[] args) throws Exception {
         Path data = Path.of(args[0]);
-        SecurityMaster.snapshot = SecurityMaster.build(new SecurityMaster.Raw("local", read(data, "meta.json"),
-                read(data, "securities.csv"), read(data, "issuers.csv")), null, Double.POSITIVE_INFINITY); // pinned: never checks
+        SecurityMaster.snapshot = SecurityMaster.build(new SecurityMaster.Raw("local", Files.readString(data.resolve("meta.json")),
+                Files.readString(data.resolve("securities.csv")), Files.readString(data.resolve("issuers.csv"))),
+                null, Double.POSITIVE_INFINITY); // pinned: never checks
         List<String> out = new ArrayList<>();
         for (String line : Files.readAllLines(Path.of(args[1]), StandardCharsets.UTF_8)) {
             String[] kq = line.split("\t", 2);
@@ -38,10 +39,6 @@ final class ParityDump {
             }
         }
         Files.writeString(Path.of(args[2]), String.join("\n", out) + "\n", StandardCharsets.UTF_8);
-    }
-
-    static String read(Path dir, String name) throws Exception {
-        return SecurityMaster.text(Files.readAllBytes(dir.resolve(name)));
     }
 
     static String names(Class<?> record) {

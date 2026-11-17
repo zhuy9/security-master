@@ -3,14 +3,17 @@ package io.github.zhuy9.securitymaster;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.http.HttpTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +77,8 @@ public final class SecurityMasterTest {
     static final Map<String, String> env = new HashMap<>();
     static final double[] clock = {1_000_000};
 
-    private SecurityMasterTest() {}
-
     /** A new "process": empty memory, its own cache directory, a fake GitHub, a fake clock. */
-    static FakeGitHub fresh(int ttl, String pin) throws IOException {
+    static FakeGitHub fresh(String pin) throws IOException {
         FakeGitHub github = new FakeGitHub();
         SecurityMaster.http = github;
         SecurityMaster.clock = () -> clock[0];
@@ -86,20 +87,19 @@ public final class SecurityMasterTest {
         clock[0] = 1_000_000;
         env.clear();
         env.put("SECURITY_MASTER_CACHE", Files.createTempDirectory("sm").toString());
-        env.put("SECURITY_MASTER_TTL", Integer.toString(ttl));
         if (pin != null) env.put("SECURITY_MASTER_REF", pin);
         return github;
-    }
-
-    static FakeGitHub fresh() throws IOException {
-        return fresh(3600, null);
     }
 
     static void check(boolean ok, Object what) {
         if (!ok) throw new AssertionError(what);
     }
 
-    static <T extends Throwable> T raises(Class<T> type, Runnable body) {
+    interface Io {
+        void run() throws Exception;
+    }
+
+    static <T extends Throwable> T raises(Class<T> type, Io body) {
         try {
             body.run();
         } catch (Throwable e) {
@@ -157,18 +157,17 @@ public final class SecurityMasterTest {
             script.addAll(List.of("drop", "drop", "200"));
             check(new String(SecurityMaster.fetch(url, 3), StandardCharsets.UTF_8).equals("data") && hits.get() == 3, hits);
             hits.set(0);
-            raises(UncheckedIOException.class, () -> unchecked(() -> SecurityMaster.fetch(url, 1)));
+            raises(IOException.class, () -> SecurityMaster.fetch(url, 1));
             check(hits.get() == 1, "one try: " + hits);
             hits.set(0);
-            raises(UncheckedIOException.class, () -> unchecked(() -> SecurityMaster.fetch(url, 3)));
+            raises(IOException.class, () -> SecurityMaster.fetch(url, 3));
             check(hits.get() == 3, "three tries: " + hits);
             hits.set(0);
             script.addAll(List.of("503", "200"));
             check(SecurityMaster.fetch(url, 3).length == 4 && hits.get() == 2, "a 5xx is retried: " + hits);
             hits.set(0);
             script.add("404");
-            UncheckedIOException e = raises(UncheckedIOException.class, () -> unchecked(() -> SecurityMaster.fetch(url, 3)));
-            check(e.getCause() instanceof SecurityMaster.HttpStatusException s && s.code == 404, e);
+            check(raises(SecurityMaster.HttpStatusException.class, () -> SecurityMaster.fetch(url, 3)).code == 404, "the status code");
             check(hits.get() == 1, "a 404 will not get better: no retry, " + hits);
         } finally {
             SecurityMaster.backoffMillis = backoff;
@@ -195,41 +194,28 @@ public final class SecurityMasterTest {
             }
         });
         server.start();
-        long idle = SecurityMaster.idleNanos;
-        SecurityMaster.idleNanos = TimeUnit.MILLISECONDS.toNanos(400);
+        int timeout = SecurityMaster.timeoutMillis;
+        SecurityMaster.timeoutMillis = 400;
         try {
             String base = "http://127.0.0.1:" + server.getAddress().getPort();
             check(SecurityMaster.send(base + "/slow").length == 6, "600 ms in all, but never 400 ms without data: no whole-download cap");
             long start = System.nanoTime();
-            UncheckedIOException e = raises(UncheckedIOException.class, () -> unchecked(() -> SecurityMaster.send(base + "/stall")));
-            check(e.getCause() instanceof HttpTimeoutException && System.nanoTime() - start < TimeUnit.MILLISECONDS.toNanos(1500),
-                    "gives up after 400 ms of silence: " + e);
+            raises(SocketTimeoutException.class, () -> SecurityMaster.send(base + "/stall"));
+            check(System.nanoTime() - start < TimeUnit.MILLISECONDS.toNanos(1500), "gives up after 400 ms of silence");
         } finally {
-            SecurityMaster.idleNanos = idle;
+            SecurityMaster.timeoutMillis = timeout;
             server.stop(0);
         }
     }
 
-    interface Io {
-        Object run() throws IOException;
-    }
-
-    static void unchecked(Io body) {
-        try {
-            body.run();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
     static void testABadPinFailsWithAnErrorThatNamesIt() throws IOException {
-        fresh(3600, "no-such-tag");
+        fresh("no-such-tag");
         IllegalStateException e = raises(IllegalStateException.class, () -> SecurityMaster.security("AAPL"));
         check(e.getMessage().contains("SECURITY_MASTER_REF") && e.getMessage().contains("no-such-tag"), e);
     }
 
     static void testLookups() throws IOException {
-        fresh();
+        fresh(null);
         for (String form : List.of("BRK-B", "BRK.B", "brk/b", "BRK B", " BRK-B\u00a0", "BBG000DWG505")) {
             check(SecurityMaster.security(form).orElseThrow().compositeFigi().equals("BBG000DWG505"), form);
         }
@@ -252,7 +238,7 @@ public final class SecurityMasterTest {
     }
 
     static void testRefreshesOnlyAfterTheTtlAndOnlyDownloadsANewCommit() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         check(github.calls.equals(List.of("head", "get meta.json@1", "get securities.csv@1", "get issuers.csv@1")), github.calls);
         github.calls.clear();
@@ -274,7 +260,7 @@ public final class SecurityMasterTest {
     }
 
     static void testACheckWithDataInHandTriesOnce() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL"); // nothing cached: worth three tries
         clock[0] += 3601;
         SecurityMaster.security("AAPL"); // a copy in hand: one try
@@ -283,7 +269,7 @@ public final class SecurityMasterTest {
     }
 
     static void testANewProcessReusesARecentlyCheckedDiskCache() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.calls.clear();
         SecurityMaster.snapshot = null; // a second process sharing the cache directory
@@ -300,16 +286,16 @@ public final class SecurityMasterTest {
         check(SecurityMaster.refresh().commit().equals(V1) && github.calls.equals(List.of("head")), github.calls);
         try (var files = Files.list(Path.of(env.get("SECURITY_MASTER_CACHE")))) {
             List<String> names = files.map(p -> p.getFileName().toString()).toList();
-            check(names.equals(List.of("main.java.bin")), "one file, never the Python client's main.json: " + names);
+            check(names.equals(List.of("main.java.xml")), "one file, never the Python client's main.json: " + names);
         }
         Path dir = Path.of(env.get("SECURITY_MASTER_CACHE"));
         if (!dir.getFileSystem().supportedFileAttributeViews().contains("posix")) return; // Windows: no modes to compare
-        check(Files.getPosixFilePermissions(dir.resolve("main.java.bin")).equals(Files.getPosixFilePermissions(Files.createFile(dir.resolve("probe")))),
+        check(Files.getPosixFilePermissions(dir.resolve("main.java.xml")).equals(Files.getPosixFilePermissions(Files.createFile(dir.resolve("probe")))),
                 "0666 & ~umask, like Python's file, so other users sharing the directory can read it");
     }
 
     static void testProxiesFromTheEnvironmentAsUrllibReadsThem() throws IOException {
-        fresh();
+        fresh(null);
         HttpServer proxy = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         proxy.createContext("/", ex -> {
             byte[] b = ("via-proxy " + ex.getRequestURI()).getBytes(StandardCharsets.UTF_8);
@@ -324,7 +310,7 @@ public final class SecurityMasterTest {
         } finally {
             proxy.stop(0);
         }
-        Function<String, String> via = url -> SecurityMaster.PROXIES.select(URI.create(url)).get(0).toString();
+        Function<String, String> via = url -> String.valueOf(SecurityMaster.proxy(URI.create(url)));
         env.put("HTTPS_PROXY", "http://user:pw@proxy.corp");
         check(via.apply("https://github.com/x").equals("HTTP @ proxy.corp/<unresolved>:443"), via.apply("https://github.com/x"));
         env.put("HTTPS_PROXY", "corp_proxy:3128/");
@@ -337,11 +323,11 @@ public final class SecurityMasterTest {
         check(via.apply("https://raw.githubusercontent.com/x").equals("DIRECT"), "* bypasses all");
         env.remove("no_proxy");
         env.put("https_proxy", "");
-        check(via.apply("https://github.com/x").equals("DIRECT"), "an empty lowercase variable wins over HTTPS_PROXY");
+        check(via.apply("https://github.com/x").equals("null"), "an empty lowercase variable wins over HTTPS_PROXY: Java's own settings");
     }
 
     static void testOfflineServesTheCacheAndRetriesAMinuteLater() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.offline = true;
         github.calls.clear();
@@ -355,12 +341,12 @@ public final class SecurityMasterTest {
         SecurityMaster.security("AAPL");
         check(github.calls.equals(List.of("head")), github.calls);
 
-        fresh().offline = true;
+        fresh(null).offline = true;
         raises(IllegalStateException.class, () -> SecurityMaster.security("AAPL")); // no cache and no network
     }
 
     static void testRefreshRaisesWhenItsCheckFailsAndTheDataKeepsServing() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.offline = true;
         raises(UncheckedIOException.class, SecurityMaster::refresh);
@@ -368,7 +354,7 @@ public final class SecurityMasterTest {
     }
 
     static void testOfflineKeepsServingMemoryEvenWithoutTheDiskCopy() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         try (var files = Files.list(Path.of(env.get("SECURITY_MASTER_CACHE")))) {
             for (Path f : files.toList()) Files.delete(f);
@@ -379,7 +365,7 @@ public final class SecurityMasterTest {
     }
 
     static void testAnUnwritableCacheRunsFromMemoryWithoutRedownloading() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         Path blocker = Files.createTempFile("sm", "a-file");
         env.put("SECURITY_MASTER_CACHE", blocker.resolve("cache").toString()); // mkdir under a file fails
         check(SecurityMaster.security("AAPL").isPresent(), "loads");
@@ -387,13 +373,13 @@ public final class SecurityMasterTest {
         clock[0] += 3601;
         check(SecurityMaster.security("AAPL").isPresent() && github.calls.equals(List.of("head")), github.calls);
 
-        fresh(3600, V1);
+        fresh(V1);
         env.put("SECURITY_MASTER_CACHE", blocker.resolve("cache").toString());
         check(SecurityMaster.security("AAPL").isPresent() && SecurityMaster.security("BRK-B").isPresent(), "pinned, from memory");
     }
 
     static void testNoHomeDirectoryRunsFromMemory() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         env.remove("SECURITY_MASTER_CACHE");
         String home = System.getProperty("user.home");
         System.setProperty("user.home", "?"); // what the JDK reports for a UID with no passwd entry
@@ -408,12 +394,12 @@ public final class SecurityMasterTest {
     }
 
     static void testABuildThisClientCannotParseIsNotCachedAndOldDataKeepsServing() throws IOException {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.head = V3;
         clock[0] += 3601;
         check(SecurityMaster.security("AAPL").orElseThrow().cik().equals("0000320193") && SecurityMaster.meta().commit().equals(V1), "old data");
-        Path cache = Path.of(env.get("SECURITY_MASTER_CACHE"), "main.java.bin");
+        Path cache = Path.of(env.get("SECURITY_MASTER_CACHE"), "main.java.xml");
         check(SecurityMaster.read(cache).commit().equals(V1), "the bad build never reached the cache");
         github.calls.clear();
         clock[0] += 30;
@@ -422,13 +408,13 @@ public final class SecurityMasterTest {
     }
 
     static void testAFirstLoadThatFailsSaysWhy() throws IOException {
-        fresh().head = V3;
+        fresh(null).head = V3;
         IllegalStateException e = raises(IllegalStateException.class, () -> SecurityMaster.security("AAPL"));
         check(e.getMessage().contains("has no composite_figi column"), e); // a parse failure, not the network
     }
 
     static void testOtherThreadsServeTheStaleCopyWhileOneChecks() throws Exception {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.entered = new CountDownLatch(1);
         github.gate = new CountDownLatch(1);
@@ -442,7 +428,7 @@ public final class SecurityMasterTest {
     }
 
     static void testAPinnedCommitNeverChecksForUpdates() throws IOException {
-        FakeGitHub github = fresh(3600, V1);
+        FakeGitHub github = fresh(V1);
         github.head = V2;
         check(SecurityMaster.security("NVDA").isEmpty() && SecurityMaster.meta().commit().equals(V1), "pinned to V1");
         clock[0] += 1e9;
@@ -451,7 +437,7 @@ public final class SecurityMasterTest {
     }
 
     static void testConcurrentCallersShareOneCheck() throws Exception {
-        FakeGitHub github = fresh();
+        FakeGitHub github = fresh(null);
         SecurityMaster.security("AAPL");
         github.calls.clear();
         github.head = V2;
@@ -464,25 +450,9 @@ public final class SecurityMasterTest {
     }
 
     public static void main(String[] args) throws Exception {
-        testCsvAndTickerOrder();
-        testHttpRetriesADroppedConnectionThenGivesUp();
-        testASlowDownloadFinishesAndAStalledOneTimesOut();
-        testABadPinFailsWithAnErrorThatNamesIt();
-        testLookups();
-        testRefreshesOnlyAfterTheTtlAndOnlyDownloadsANewCommit();
-        testACheckWithDataInHandTriesOnce();
-        testANewProcessReusesARecentlyCheckedDiskCache();
-        testOfflineServesTheCacheAndRetriesAMinuteLater();
-        testRefreshRaisesWhenItsCheckFailsAndTheDataKeepsServing();
-        testOfflineKeepsServingMemoryEvenWithoutTheDiskCopy();
-        testAnUnwritableCacheRunsFromMemoryWithoutRedownloading();
-        testNoHomeDirectoryRunsFromMemory();
-        testABuildThisClientCannotParseIsNotCachedAndOldDataKeepsServing();
-        testAFirstLoadThatFailsSaysWhy();
-        testOtherThreadsServeTheStaleCopyWhileOneChecks();
-        testAPinnedCommitNeverChecksForUpdates();
-        testConcurrentCallersShareOneCheck();
-        testProxiesFromTheEnvironmentAsUrllibReadsThem();
-        System.out.println("19 checks passed");
+        List<Method> tests = Arrays.stream(SecurityMasterTest.class.getDeclaredMethods()).filter(m -> m.getName().startsWith("test"))
+                .sorted(Comparator.comparing(Method::getName)).toList();
+        for (Method test : tests) test.invoke(null);
+        System.out.println(tests.size() + " checks passed");
     }
 }
