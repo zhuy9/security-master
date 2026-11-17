@@ -1343,6 +1343,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000933972,374Water Inc.,operating,3621,Motors & Generators,DE,1231,United States
 0000933974,"Azenta, Inc.",operating,3559,"Special Industry Machinery, NEC",DE,0930,United States
 0000934549,ACACIA RESEARCH CORP,operating,6794,Patent Owners & Lessors,DE,1231,United States
+0000935015,ARTISAN PARTNERS FUNDS INC,investment,,,WI,0930,United States
 0000935036,"ACI WORLDWIDE, INC.",operating,7372,Services-Prepackaged Software,DE,1231,United States
 0000935419,"RCI HOSPITALITY HOLDINGS, INC.",operating,5812,Retail-Eating  Places,TX,0930,United States
 0000935703,"DOLLAR TREE, INC.",operating,5331,Retail-Variety Stores,VA,0130,United States
@@ -5139,6 +5140,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001898601,IPERIONX Ltd,other,1090,Miscellaneous Metal Ores,Australia,0630,United States
 0001898643,Mobilicom Ltd,other,3721,Aircraft,Australia,1231,Australia
 0001898718,GMR Solutions Inc.,operating,4700,Transportation Services,DE,1231,United States
+0001898722,Modern Mining Technology Corp.,other,4953,Refuse Systems,"British Columbia, Canada",1231,Canada
 0001898766,Trio Petroleum Corp,operating,1311,Crude Petroleum & Natural Gas,DE,1031,United States
 0001898795,"LiveWire Group, Inc.",operating,3751,"Motorcycles, Bicycles & Parts",DE,1231,United States
 0001899005,Beamr Imaging Ltd.,other,7372,Services-Prepackaged Software,Israel,1231,Israel
@@ -5773,6 +5775,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002039060,Robin Energy Ltd.,other,4412,Deep Sea Foreign Transportation of  Freight,Marshall Islands,1231,Cyprus
 0002039072,DAVION HEALTHCARE PLC,other,3841,Surgical & Medical Instruments & Apparatus,Cyprus,1231,Ireland
 0002039273,Jaguar Uranium Corp.,operating,1000,Metal Mining,"British Columbia, Canada",1231,Canada (Federal Level)
+0002039458,Canary HBAR ETF,operating,6199,Finance Services,DE,1231,United States
 0002039461,Canary Litecoin ETF,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
 0002039497,"Resolute Holdings Management, Inc.",operating,6199,Finance Services,NV,1231,United States
 0002039505,Canary XRP ETF,operating,6221,Commodity Contracts Brokers & Dealers,DE,1231,United States
@@ -6141,6 +6144,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002097986,Forefront Tech Holdings Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,British
 0002098242,Spring Valley Acquisition Corp. IV,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002098395,IMC Rare Earths Ltd,other,1000,Metal Mining,Cayman Islands,0331,Brazil
+0002098410,Bluerock Acquisition Corp. II,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002098430,Madison Air Solutions Corp,operating,3564,Industrial & Commercial Fans & Blowers & Air Purifing Equip,DE,1231,United States
 0002098669,United Acquisition Corp. I,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002098707,Burtech Acquisition Corp II,operating,6770,Blank Checks,Cayman Islands,1231,United States
@@ -6288,6 +6292,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002145659,JATT III Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002146310,Inflection Point Acquisition Corp. VIII,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002147219,Rainier Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002148436,Southport Acquisition Corp. II,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002149916,TCGX Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002152623,"Navient Holdings, Inc.",operating,6211,"Security Brokers, Dealers & Flotation Companies",DE,1231,United States
 0002153598,Frazier Life Sciences Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,United States
