@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.zhuy9</groupId>
+  <artifactId>security-master</artifactId>
+  <version>0.1.0</version>
+
+  <name>security-master</name>
+  <description>US exchange-listed stocks, ETFs and closed-end funds keyed by FIGI, with SEC issuer data; cached locally and refreshed from GitHub.</description>
+  <url>https://github.com/zhuy9/security-master</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://github.com/zhuy9/security-master/blob/main/LICENSE</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>zhuy9</id>
+      <name>zhuy9</name>
+      <url>https://github.com/zhuy9</url>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/zhuy9/security-master.git</connection>
+    <developerConnection>scm:git:https://github.com/zhuy9/security-master.git</developerConnection>
+    <url>https://github.com/zhuy9/security-master</url>
+  </scm>
+
+  <!-- No dependencies: the client uses the JDK only, like the Python client uses the standard library. -->
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.outputTimestamp>2026-11-17T00:00:00Z</project.build.outputTimestamp>
+    <skipTests>false</skipTests>
+  </properties>
+
+  <build>
+    <resources>
+      <!-- The code and data notices, as the Python wheel carries them. Never the CSV files. -->
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <includes><include>LICENSE</include></includes>
+        <targetPath>META-INF</targetPath>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/../data</directory>
+        <includes><include>LICENSE</include></includes>
+        <targetPath>META-INF/data</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.15.0</version>
+        <configuration>
+          <compilerArgs>
+            <!-- -module: the module name must match the io.github.zhuy9 namespace, digit and all. -->
+            <arg>-Xlint:all,-serial,-module</arg>
+            <arg>-Werror</arg>
+          </compilerArgs>
+        </configuration>
+        <executions>
+          <execution>
+            <!-- The tests compile inside the module and use the JDK's HTTP server as a fake GitHub. -->
+            <id>default-testCompile</id>
+            <configuration>
+              <compilerArgs combine.children="append">
+                <arg>--add-modules=jdk.httpserver</arg>
+                <arg>--add-reads=io.github.zhuy9.securitymaster=jdk.httpserver</arg>
+              </compilerArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- The checks are a plain main(), like tests/test_client.py, so there is no test framework to download. -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.6.4</version>
+        <executions>
+          <execution>
+            <id>checks</id>
+            <phase>test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${skipTests}</skip>
+              <executable>java</executable>
+              <classpathScope>test</classpathScope>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>io.github.zhuy9.securitymaster.SecurityMasterTest</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- No JUnit tests: the checks above run instead, so surefire would only report "Tests run: 0". -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration><skip>true</skip></configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.5.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+          <execution>
+            <id>sources</id>
+            <goals><goal>jar-no-fork</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.12.0</version>
+        <configuration>
+          <doclint>all,-missing</doclint>
+          <quiet>true</quiet>
+        </configuration>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- mvn -P release deploy, from .github/workflows/java.yml: sign, then upload to Maven Central and publish. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <phase>verify</phase>
+                <goals><goal>sign</goal></goals>
+                <configuration>
+                  <!-- Bouncy Castle: the key and passphrase come from MAVEN_GPG_KEY and MAVEN_GPG_PASSPHRASE, no gpg install. -->
+                  <signer>bc</signer>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.12.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

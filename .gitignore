@@ -88,3 +88,6 @@ tmbootpicker.efi
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Java client build output
+java/target/
