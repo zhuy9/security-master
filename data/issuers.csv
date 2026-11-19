@@ -3253,6 +3253,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001560385,Liberty Media Corp,operating,4833,Television Broadcasting Stations,NV,1231,United States
 0001560672,Ellington Credit Co,operating,6798,Real Estate Investment Trusts,DE,0331,United States
 0001561032,"National Healthcare Properties, Inc.",operating,6798,Real Estate Investment Trusts,MD,1231,United States
+0001561540,Torex Resources Inc.,other,1040,Gold and Silver Ores,"Ontario, Canada",1231,Canada
 0001561550,"Datadog, Inc.",operating,7372,Services-Prepackaged Software,NV,1231,United States
 0001561785,FIRST TRUST EXCHANGE-TRADED FUND VII,investment,,,MA,,United States
 0001561861,"Grupo Aeromexico, S.A.B. de C.V.",other,4512,"Air Transportation, Scheduled",Mexico,1231,Mexico
@@ -4703,6 +4704,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0001832332,"Aveanna Healthcare Holdings, Inc.",operating,8082,Services-Home Health Care Services,DE,0101,United States
 0001832466,"Alignment Healthcare, Inc.",operating,6324,Hospital & Medical Service Plans,DE,1231,United States
 0001832483,Serve Robotics Inc. /DE/,operating,3569,"General Industrial Machinery & Equipment, NEC",DE,1231,United States
+0001832487,"Guerrilla RF, Inc.",operating,3674,Semiconductors & Related Devices,DE,1231,United States
 0001832511,P3 Health Partners Inc.,operating,8000,Services-Health Services,DE,1231,United States
 0001832871,BlackRock 2037 Municipal Target Term Trust,other,,,MD,1231,United States
 0001833141,Helus Pharma Inc.,other,2834,Pharmaceutical Preparations,"British Columbia, Canada",0331,Canada
@@ -6164,6 +6166,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002100704,East West Ave Acquisition Corp.,operating,6770,Blank Checks,NV,1130,United States
 0002100782,"Generate Biomedicines, Inc.",operating,2834,Pharmaceutical Preparations,DE,1231,United States
 0002100805,"Janus Living, Inc.",operating,6798,Real Estate Investment Trusts,MD,1231,United States
+0002100848,Versa Bancorp,other,6029,"Commercial Banks, NEC",DE,1231,Canada
 0002101135,Illumination Acquisition Corp. I,operating,6770,Blank Checks,Cayman Islands,1130,United States
 0002101240,SunScout Holding Ltd,other,3674,Semiconductors & Related Devices,Cayman Islands,0630,New Zealand
 0002101393,AmperCap Acquisition Co,operating,6770,Blank Checks,Cayman Islands,1130,United States
