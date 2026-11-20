@@ -3,7 +3,7 @@ name: release
 on:
   push: # lint, test and build every code change; only a published release uploads
     branches: [main]
-    paths-ignore: ["data/**"]
+    paths-ignore: ["data/**", "java/**"]
   release:
     types: [published]
   workflow_dispatch:
@@ -13,6 +13,8 @@ permissions:
 
 jobs:
   build:
+    # A java-v* release is the Java client's (java.yml); it must never reach PyPI.
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -50,7 +52,7 @@ jobs:
           if-no-files-found: error
 
   publish:
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
     needs: build
     runs-on: ubuntu-latest
     environment:

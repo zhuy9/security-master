@@ -1,7 +1,7 @@
 # security-master
 
 [![PyPI](https://img.shields.io/pypi/v/security-master)](https://pypi.org/project/security-master/)
-[![GitHub tag](https://img.shields.io/github/v/tag/zhuy9/security-master)](https://github.com/zhuy9/security-master/releases)
+[![GitHub tag](https://img.shields.io/github/v/tag/zhuy9/security-master?filter=v*)](https://github.com/zhuy9/security-master/releases)
 [![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fzhuy9%2Fsecurity-master%2Fmain%2Fpyproject.toml)](https://pypi.org/project/security-master/)
 [![Data updated](https://img.shields.io/github/last-commit/zhuy9/security-master/main?path=data&label=data%20updated)](https://github.com/zhuy9/security-master/commits/main/data)
 [![License](https://img.shields.io/badge/license-MIT%20code%2C%20CC0%20data-blue)](https://github.com/zhuy9/security-master#license)
@@ -84,6 +84,37 @@ The version pins the client code, not the data. The weekday data job can keep up
 files without a new package release. Use `SECURITY_MASTER_REF` to pin the data too.
 To get a newer client release, run `pip install --upgrade security-master`, or with uv,
 `uv lock --upgrade-package security-master`. Update any version pin in your project's requirements too.
+
+### Java
+
+Java 17+, no dependencies. A port of the Python client, published to Maven Central:
+
+```xml
+<dependency>
+  <groupId>io.github.zhuy9</groupId>
+  <artifactId>security-master</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+```java
+import io.github.zhuy9.securitymaster.SecurityMaster;
+
+SecurityMaster.security("BRK.B");         // Optional<Security>, by ticker in any form or by composite FIGI
+SecurityMaster.issuer(1067983);           // Optional<Issuer>, by SEC CIK; or issuer("0001067983")
+SecurityMaster.securities();              // every active row; securities(false) for all
+SecurityMaster.issuers();
+SecurityMaster.meta();                    // Meta(commit, json): the commit, and meta.json as text
+SecurityMaster.refresh();                 // check for a new build now; throws if the check fails
+```
+
+It caches, refreshes and pins exactly like the Python client and reads the same three variables
+above. `Security` and `Issuer` are records with one `String` per column, in camel case
+(`compositeFigi()`, `sicDescription()`), and `""` means unknown. `meta()` returns `meta.json`
+unparsed, for your JSON library; there is no `frame()`. The cache file is `<ref>.java.xml`, next to
+the Python client's `<ref>.json`. Behind a proxy it reads `https_proxy` and `no_proxy` as Python
+does, or the JVM's `-Dhttps.proxyHost` and `-Djava.net.useSystemProxies=true`; proxy logins are not
+supported.
 
 ### Any language: the CSV files
 
@@ -186,8 +217,9 @@ If SEC's CDN hands it older ticker files than the last build used, it keeps the 
 passes with a warning, failing only once the data is more than 4 days old.
 
 Layout: `src/build.py` builds the data (with `src/sectors.py`, the SIC-to-sector table);
-`src/security_master/` is the Python client, the only thing the package ships; `tests/` checks both
-without network; `docs/DATA_SOURCES.md` records each source's terms.
+`src/security_master/` is the Python client, the only thing the package ships; `java/` is the Java
+client; `tests/` checks the builder and the Python client without network; `docs/DATA_SOURCES.md`
+records each source's terms.
 
 `.github/workflows/refresh.yml` runs it every weekday at 15:17 UTC, refetches every issuer on
 Mondays, and commits `data/` when it changed. It needs the repository secrets `EDGAR_IDENTITY`
@@ -196,6 +228,7 @@ and `OPENFIGI_API_KEY`.
 ## Publish a release
 
 Release the Python client when its code changes. The daily data refresh does not need a release.
+Tags `v*` release the Python client; tags `java-v*` release the [Java client](#publish-a-java-release).
 The package downloads its data from GitHub; the CSV files are not bundled in the package.
 
 1. Set `version` in `pyproject.toml` to one not yet on PyPI, which does not let you replace an
@@ -223,6 +256,37 @@ The package downloads its data from GitHub; the CSV files are not bundled in the
    [PyPI project page](https://pypi.org/project/security-master/) and run
    `pip install security-master==<version>`.
 
+## Publish a Java release
+
+The Java client has its own version, in `java/pom.xml`. Its checks need JDK 17+, Maven and Python:
+
+```sh
+mvn -B -f java/pom.xml clean verify   # compiles with -Werror, runs the checks, builds the jars
+python java/check.py                  # jar contents, and every lookup on data/ against the Python client
+```
+
+One-time setup:
+
+1. Sign in to [central.sonatype.com](https://central.sonatype.com) with the `zhuy9` GitHub account,
+   which verifies the `io.github.zhuy9` namespace, and generate a user token.
+2. Create a GPG signing key. Publish its public key with
+   `gpg --keyserver keyserver.ubuntu.com --send-keys <key id>`, and also upload it at
+   [keys.openpgp.org](https://keys.openpgp.org/upload) and click the link it emails: unverified keys
+   lose their user ID there, and stock GnuPG then can't import them to check a signature.
+3. In the repository settings, create the environment `maven-central`, limit its deployment tags to
+   `java-v*`, and add the secrets `MAVEN_CENTRAL_USERNAME` and `MAVEN_CENTRAL_PASSWORD` (the user token),
+   `MAVEN_GPG_KEY` (`gpg --export-secret-keys --armor <key id>`) and `MAVEN_GPG_PASSPHRASE`. Limit the
+   `pypi` environment's deployment tags to `v*`.
+
+Each release:
+
+1. Set `<version>` in `java/pom.xml` to one not yet on Maven Central, which never replaces a release.
+   Run the checks above, then commit and push to `main`.
+2. Open **Releases > Draft a new release**, create the tag `java-v` plus that version from `main`,
+   clear **Set as the latest release**, and click **Publish release**. The `java` workflow checks,
+   signs and uploads it; the Python `release` workflow skips it.
+3. Check [Maven Central](https://central.sonatype.com/artifact/io.github.zhuy9/security-master).
+
 ## License
 
 Code: MIT (`LICENSE`). This project's data contributions: CC0 1.0. OpenFIGI identifiers and metadata
@@ -230,7 +294,7 @@ carry the FIGI MIT notice. Sources and their terms: `docs/DATA_SOURCES.md`.
 
 Keep [data/LICENSE](https://github.com/zhuy9/security-master/blob/main/data/LICENSE) with any
 redistributed CSV files, caches, or exports. Both code and data notices are included in the Python
-package's license files.
+package's license files and in the Java jar's `META-INF`.
 
 Not affiliated with or endorsed by the SEC, Bloomberg, or any exchange. Provided as is, with no
 warranty. Not investment advice.

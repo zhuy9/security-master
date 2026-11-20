@@ -1,0 +1,69 @@
+name: java
+
+on:
+  push: # test the Java client when it, the Python client it mirrors, or the columns change; only a java-v* release uploads
+    branches: [main]
+    paths: ["java/**", "src/security_master/**", "src/build.py", ".github/workflows/java.yml"]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # A v* release is the Python client's (release.yml).
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'java-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Check release version
+        if: github.event_name == 'release'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: python -c "import os, xml.etree.ElementTree as ET; v = ET.parse('java/pom.xml').find('{http://maven.apache.org/POM/4.0.0}version').text; assert os.environ['RELEASE_TAG'] == f'java-v{v}', 'Release tag must be java-v plus the pom version'"
+      - name: Lint
+        run: |
+          python -m pip install ruff==0.17.1
+          ruff check java
+      - name: Build and test
+        run: mvn -B -f java/pom.xml verify
+      - name: Check the jar and parity with the Python client
+        run: python java/check.py
+
+  publish:
+    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'java-v')
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: maven-central
+      url: https://central.sonatype.com/artifact/io.github.zhuy9/security-master
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with: # no dependency cache in the job that holds the signing key
+          distribution: temurin
+          java-version: "17"
+          server-id: central
+          server-username-env-var: MAVEN_CENTRAL_USERNAME
+          server-password-env-var: MAVEN_CENTRAL_PASSWORD
+      - name: Sign and publish to Maven Central
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn -B -f java/pom.xml -P release -DskipTests deploy # the build job ran the checks on the same commit

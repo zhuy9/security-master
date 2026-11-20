@@ -5,6 +5,8 @@
 - US exchange-listed securities keyed by composite FIGI, joined to SEC issuers by CIK.
 - Python 3.10+, standard library only. Pandas is optional for `frame()`.
 - `src/security_master/__init__.py` is the client shipped on PyPI.
+- `java/` is its Java 17 port, JDK only, shipped on Maven Central. Change lookup, cache or refresh
+  behavior in both clients in the same change.
 - `src/build.py` builds the data; `src/sectors.py` maps SIC codes to sectors.
 - `data/` holds the public CSV files and build metadata. `docs/DATA_SOURCES.md` records source terms.
 - `README.md` has user instructions, data fields, and release steps.
@@ -20,6 +22,21 @@ ruff check .
 python tests/test_build.py
 python tests/test_sectors.py
 python tests/test_client.py
+```
+
+The Java client needs JDK 17+, Maven and Python. `java/check.py` checks the jar's contents and compares
+every lookup on `data/` with the Python client.
+
+```sh
+mvn -B -f java/pom.xml clean verify
+python java/check.py
+```
+
+Without a JDK, use Docker. The Maven image has no Python, so install it first:
+
+```sh
+docker run --rm -v "$PWD":/w -w /w maven:3.9-eclipse-temurin-17 sh -c 'apt-get -qq update && \
+  apt-get -qq install -y python3 >/dev/null && mvn -B -f java/pom.xml clean verify && python3 java/check.py'
 ```
 
 Ruff runs with its default rules. Don't run `ruff format`: the code is formatted by hand.
@@ -44,9 +61,12 @@ python tests/test_package.py
 - To rebuild locally, copy `.env.example` to `.env`, set `EDGAR_IDENTITY`, and run `python src/build.py`.
   `OPENFIGI_API_KEY` is optional. `--full` refetches all issuers. This makes live API calls and writes data.
 - `.github/workflows/release.yml` tests and builds with Python 3.12. A push to `main` that changes more than
-  `data/`, or a manual run, checks the package only.
+  `data/` and `java/`, or a manual run, checks the package only.
   Publishing a GitHub release uploads it to PyPI through the `pypi` environment and Trusted Publishing.
-- The release tag must be `v` plus the version in `pyproject.toml`. Follow the release steps in the README.
+- `.github/workflows/java.yml` checks the Java client with JDK 17 when it, the Python client or `src/build.py`
+  changes. A `java-v*` release uploads it to Maven Central through the `maven-central` environment.
+- The release tag must be `v` plus the version in `pyproject.toml`. A Java release tag is `java-v` plus the
+  version in `java/pom.xml`; each workflow skips the other's tags. Follow the release steps in the README.
 - Package versions control client code. Data updates do not need package releases.
 - Keep the data format compatible with released clients, which keep downloading new data.
 - Run both source test scripts and the package checks before a release. Verify the built wheel imports
