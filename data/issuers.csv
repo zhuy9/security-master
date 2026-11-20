@@ -637,6 +637,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0000739421,CITIZENS FINANCIAL SERVICES INC,operating,6022,State Commercial Banks,PA,1231,United States
 0000740260,"Ventas, Inc.",operating,6798,Real Estate Investment Trusts,DE,1231,United States
 0000740664,R F INDUSTRIES LTD,operating,3678,Electronic Connectors,NV,1031,United States
+0000740806,F&M BANK CORP,operating,6022,State Commercial Banks,VA,1231,United States
 0000742278,RPC INC,operating,1389,"Oil & Gas Field Services, NEC",,1231,United States
 0000743367,BAR HARBOR BANKSHARES,operating,6022,State Commercial Banks,ME,1231,United States
 0000744187,REX AMERICAN RESOURCES Corp,operating,2860,Industrial Organic Chemicals,DE,0131,United States
@@ -5980,6 +5981,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002077785,Iris Acquisition Corp II,operating,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002077954,Evolution Global Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002078008,Versigent PLC,operating,3714,Motor Vehicle Parts & Accessories,Jersey,1231,Switzerland
+0002078148,Zoar Ltd,other,2834,Pharmaceutical Preparations,Cayman Islands,0331,Hong Kong
 0002078265,Corgi ETF Trust I,investment,,,DE,1231,United States
 0002078416,"Liberty Live Holdings, Inc.",operating,7900,Services-Amusement & Recreation Services,NV,1231,United States
 0002078653,Range Capital Acquisition Corp II,operating,6770,Blank Checks,Cayman Islands,1231,United States
@@ -6192,6 +6194,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002104391,Catalyst Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002104879,RMG ML Sports Holdings,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002104882,"EagleRock Land, LLC",operating,6792,Oil Royalty Traders,TX,1231,United States
+0002105038,Cizzle Brands Corp,other,2000,Food and Kindred Products,"British Columbia, Canada",0731,Canada
 0002105139,ADI GLOBAL DISTRIBUTION INC.,operating,5072,Wholesale-Hardware,DE,1231,United States
 0002105274,"InterPrivate Investment Partners V, Inc.",operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002105398,"Csquare, Inc.",operating,7370,"Services-Computer Programming, Data Processing, Etc.",DE,1231,United States
@@ -6263,6 +6266,7 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002128739,Atlantic Acquisition Corp I,operating,6770,Blank Checks,,1231,United States
 0002129056,Jones Ventures INTL Acquisition1 Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002129659,Freedom Metals Acquisition Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002130357,"Anthropic, PBC",other,7372,Services-Prepackaged Software,DE,1231,United States
 0002130386,Yorkville International Capital Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002130606,"Obsidian Therapeutics, Inc.",operating,2834,Pharmaceutical Preparations,,1231,United States
 0002131040,Robinhood Ventures Fund II,operating,,,DE,0331,United States
@@ -6277,6 +6281,8 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002133239,Southern Cross Acquisition II Corp.,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002133719,NorthStrive Acquisition Corp I.,operating,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002134856,Xterax Corp II,operating,6770,Blank Checks,Cayman Islands,1231,United States
+0002135590,Capital Group Multi-Asset Income ETF,investment,,,DE,0531,United States
+0002135658,Capital Group Multi-Asset Income Builder ETF,investment,,,DE,0531,United States
 0002136387,Real REMAX Group Inc.,operating,6531,Real Estate Agents & Managers (For Others),DE,1231,United States
 0002136530,Meridian3 Industrials Acquisition Corp,operating,6770,Blank Checks,Cayman Islands,1231,United States
 0002137497,William Blair ETF Trust,investment,,,DE,1231,United States
@@ -6299,3 +6305,4 @@ cik,name,entity_type,sic,sic_description,state_of_incorporation,fiscal_year_end,
 0002149916,TCGX Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,Cayman Islands
 0002152623,"Navient Holdings, Inc.",operating,6211,"Security Brokers, Dealers & Flotation Companies",DE,1231,United States
 0002153598,Frazier Life Sciences Acquisition Corp. II,other,6770,Blank Checks,Cayman Islands,1231,United States
+0002155396,Brookfield Infrastructure Partners Inc.,other,,,"British Columbia, Canada",1231,United States
